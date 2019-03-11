@@ -6,6 +6,11 @@ from api import views
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
+router.register(r'employees', views.EmployeeViewSet)
+router.register(r'income', views.IncomeViewSet)
+router.register(r'outcome', views.OutcomeViewSet)
+router.register(r'event', views.EventViewSet)
+
 
 urlpatterns = [
     path('', include(router.urls))
