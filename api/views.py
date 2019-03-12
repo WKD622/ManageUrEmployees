@@ -2,11 +2,13 @@ import datetime
 
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 from api.serializers import UserSerializer, GroupSerializer
 from .models import Employee, Income, Outcome, Event
 from .serializers import EmployeeSerializer, EventMiniSerializer, IncomeSerializer, OutcomeSerializer, EventSerializer
-from rest_framework.decorators import action
-from rest_framework.response import Response
+from datetime import timedelta, datetime
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -23,18 +25,16 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
 
-    ''''''
     def list(self, request, *args, **kwargs):
         number_of_employees = request.GET.get('number_of_employees', None)
 
         if number_of_employees is not None:
-            employees = Employee.objects.order_by('-salary')[:5]
+            employees = Employee.objects.order_by('-salary')[:number_of_employees]
         else:
             employees = Employee.objects.order_by('-salary')
 
         serializer = self.get_serializer(employees, many=True)
         return Response(serializer.data)
-
 
     '''Fires employee based on given pesel number'''
 
@@ -52,7 +52,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
                 employee.delete()
                 return Response("Employee " + first_name + " " + last_name + " fired.")
 
-    '''promotes\demotes employe'''
+    '''promotes\demotes employe based on given pesel number'''
 
     @action(detail=False, methods=['get'])
     def change_position(self, request, *args, **kwargs):
@@ -81,11 +81,55 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 class IncomeViewSet(viewsets.ModelViewSet):
     queryset = Income.objects.all()
     serializer_class = IncomeSerializer
+    filter_fields = ('name', 'date')
+
+    @action(detail=False, methods=['get'])
+    def last_incomes(self, request, *args, **kwargs):
+        number_of_incomes_to_show = request.GET.get('number_of_incomes', None)
+        if number_of_incomes_to_show is not None:
+            incomes = Income.objects.order_by('date')[:int(number_of_incomes_to_show)]
+        else:
+            incomes = Income.objects.order_by('date')
+        serializer = EventSerializer(incomes, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def sum_of_cost(self, request, *args, **kwargs):
+        days_back = request.GET.get('days', 7)
+        current_date = datetime.today().date()
+        date_for_filter = current_date - timedelta(days=int(days_back))
+        incomes = Income.objects.filter(date__gte=date_for_filter)
+        sum = 0
+        for income in incomes:
+            sum += int(income.sum)
+        return Response("Total income from the last " + str(days_back) + " days is: " + str(sum))
 
 
 class OutcomeViewSet(viewsets.ModelViewSet):
     queryset = Outcome.objects.all()
     serializer_class = OutcomeSerializer
+    filter_fields = ('name', 'date')
+
+    @action(detail=False, methods=['get'])
+    def last_outcomes(self, request, *args, **kwargs):
+        number_of_outcomes_to_show = request.GET.get('number_of_outcomes', None)
+        if number_of_outcomes_to_show is not None:
+            outcomes = Outcome.objects.order_by('date')[:int(number_of_outcomes_to_show)]
+        else:
+            outcomes = Outcome.objects.order_by('date')
+        serializer = EventSerializer(outcomes, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def sum_of_cost(self, request, *args, **kwargs):
+        days_back = request.GET.get('days', 7)
+        current_date = datetime.today().date()
+        date_for_filter = current_date - timedelta(days=int(days_back))
+        outcomes = Outcome.objects.filter(date__gte=date_for_filter)
+        sum = 0
+        for outcome in outcomes:
+            sum += int(outcome.sum)
+        return Response("Total outcome from the last " + str(days_back) + " days is: " + str(sum))
 
 
 class EventViewSet(viewsets.ModelViewSet):
@@ -93,9 +137,9 @@ class EventViewSet(viewsets.ModelViewSet):
     serializer_class = EventMiniSerializer
 
     def get_future_events(self):
-        events = Event.objects.filter(date__gte=datetime.datetime.today().date())
-        current_date = datetime.datetime.today().date()
-        current_time = datetime.datetime.today().time()
+        events = Event.objects.filter(date__gte=datetime.today().date())
+        current_date = datetime.today().date()
+        current_time = datetime.today().time()
         for event in events:
             if event.date == current_date:
                 if event.time < current_time:
@@ -120,9 +164,9 @@ class EventViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def todays_events(self, request, *args, **kwargs):
-        events = Event.objects.filter(date=datetime.datetime.today())
+        events = Event.objects.filter(date=datetime.today())
 
-        current_time = datetime.datetime.today().time()
+        current_time = datetime.today().time()
         for event in events:
             if event.time < current_time:
                 events = events.exclude(id=event.id)
