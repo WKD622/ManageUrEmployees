@@ -36,7 +36,9 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(employees, many=True)
         return Response(serializer.data)
 
-    '''Fires employee based on given pesel number'''
+    '''
+    Fires employee based on given pesel number
+    '''
 
     @action(detail=False, methods=['get'])
     def fire(self, request, *args, **kwargs):
@@ -52,7 +54,9 @@ class EmployeeViewSet(viewsets.ModelViewSet):
                 employee.delete()
                 return Response("Employee " + first_name + " " + last_name + " fired.")
 
-    '''promotes\demotes employe based on given pesel number'''
+    '''
+    promotes\demotes employe based on given pesel number
+    '''
 
     @action(detail=False, methods=['get'])
     def change_position(self, request, *args, **kwargs):
@@ -153,7 +157,9 @@ class EventViewSet(viewsets.ModelViewSet):
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
 
-    '''Returns closest event based on current date and time'''
+    '''
+    Returns closest event based on current date and time
+    '''
 
     @action(detail=False, methods=['get'])
     def next_event(self, request, *args, **kwargs):
