@@ -18,7 +18,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Employee
-        fields = ('first_name', 'last_name', 'pesel', 'position', 'salary')
+        fields = ('id', 'first_name', 'last_name', 'pesel', 'position', 'salary')
 
 
 class IncomeSerializer(serializers.HyperlinkedModelSerializer):
@@ -36,4 +36,10 @@ class OutcomeSerializer(serializers.HyperlinkedModelSerializer):
 class EventSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Event
-        fields = ('name', 'description', 'date', 'time')
+        fields = ('id', 'name', 'description', 'date', 'time')
+
+
+class EventMiniSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Event
+        fields = ('name', 'date', 'time')
