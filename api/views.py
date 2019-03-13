@@ -12,7 +12,7 @@ from datetime import timedelta, datetime
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all().order_by('-date_joined')
+    queryset = User.objects.all().order_by('-id')
     serializer_class = UserSerializer
 
 
@@ -24,6 +24,11 @@ class GroupViewSet(viewsets.ModelViewSet):
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     def list(self, request, *args, **kwargs):
         number_of_employees = request.GET.get('number_of_employees', None)
@@ -38,9 +43,9 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 
     '''Fires employee based on given pesel number'''
 
-    @action(detail=False, methods=['get'])
-    def fire(self, request, *args, **kwargs):
-        pesel = request.GET.get('pesel', None)
+    @action(detail=True, methods=['get'])
+    def fire(self, request, pesel=None, *args, **kwargs):
+        return Response(pesel)
         employee = Employee.objects.filter(pesel=pesel)
 
         if pesel is not None:

@@ -1,5 +1,4 @@
-*.pyc 
-venv/
+*.pyc
 .idea
 __pycache__/
 migrations
