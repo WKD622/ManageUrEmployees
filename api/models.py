@@ -1,14 +1,16 @@
 from __future__ import unicode_literals
 from datetime import datetime
 from django.db import models
+from django.core.validators import MinLengthValidator
 
 
 class Employee(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    pesel = models.CharField(max_length=11)
+    pesel = models.CharField(max_length=11, primary_key=True)
     position = models.CharField(max_length=50, null=True)
     salary = models.IntegerField(null=True)
+    hired = models.BooleanField(default=True)
 
 
 class Income(models.Model):

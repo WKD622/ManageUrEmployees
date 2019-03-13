@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib.auth.models import User, Group
+from django.db.models import Sum
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -9,6 +10,7 @@ from api.serializers import UserSerializer, GroupSerializer
 from .models import Employee, Income, Outcome, Event
 from .serializers import EmployeeSerializer, EventMiniSerializer, IncomeSerializer, OutcomeSerializer, EventSerializer
 from datetime import timedelta, datetime
+from django.shortcuts import get_list_or_404, get_object_or_404
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -25,16 +27,11 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
     def list(self, request, *args, **kwargs):
-        number_of_employees = request.GET.get('number_of_employees', None)
+        number_of_employees = request.GET.get('number_of_employees')
 
         if number_of_employees is not None:
-            employees = Employee.objects.order_by('-salary')[:number_of_employees]
+            employees = Employee.objects.order_by('-salary')[:int(number_of_employees)]
         else:
             employees = Employee.objects.order_by('-salary')
 
@@ -44,35 +41,34 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     '''Fires employee based on given pesel number'''
 
     @action(detail=True, methods=['get'])
-    def fire(self, request, pesel=None, *args, **kwargs):
-        return Response(pesel)
-        employee = Employee.objects.filter(pesel=pesel)
+    def fire(self, request, *args, **kwargs):
+        employee = self.get_object()
+        employee.hired = False
+        employee.save()
+        serializer = EmployeeSerializer(employee, many=False)
+        return Response(serializer.data)
 
-        if pesel is not None:
-            if not employee:
-                return Response("There is no employee with pesel: " + pesel)
-            else:
-                first_name = employee.get().first_name
-                last_name = employee.get().last_name
-                employee.delete()
-                return Response("Employee " + first_name + " " + last_name + " fired.")
+    @action(detail=True, methods=['get'])
+    def hire_again(self, request, *args, **kwargs):
+        employee = self.get_object()
+        employee.hired = True
+        employee.save()
+        serializer = EmployeeSerializer(employee, many=False)
+        return Response(serializer.data)
 
-    '''promotes\demotes employe based on given pesel number'''
+    # '''promotes\demotes employe based on given pesel number'''
 
-    @action(detail=False, methods=['get'])
+    @action(detail=True, methods=['post'])
     def change_position(self, request, *args, **kwargs):
-        pesel = request.GET.get('pesel', None)
-        new_position = request.GET.get('new_position', None)
+        pesel = request.POST.get('pesel')
+        new_position = request.POST.get('new_position')
 
         if pesel is not None and new_position is not None:
-            employee = Employee.objects.filter(pesel=pesel).first()
-            if not employee:
-                return Response("There is no employee with pesel: " + pesel)
-            else:
-                employee.position = new_position
-                employee.save()
-                serializer = EmployeeSerializer(employee, many=False)
-                return Response(serializer.data)
+            employee = get_object_or_404(Employee, pesel=pesel)
+            employee.position = new_position
+            employee.save()
+            serializer = EmployeeSerializer(employee, many=False)
+            return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
     def summary_cost_of_salaries(self, request, *args, **kwargs):
@@ -103,11 +99,8 @@ class IncomeViewSet(viewsets.ModelViewSet):
         days_back = request.GET.get('days', 7)
         current_date = datetime.today().date()
         date_for_filter = current_date - timedelta(days=int(days_back))
-        incomes = Income.objects.filter(date__gte=date_for_filter)
-        sum = 0
-        for income in incomes:
-            sum += int(income.sum)
-        return Response("Total income from the last " + str(days_back) + " days is: " + str(sum))
+        sum_of_incomes = Income.objects.filter(date__gte=date_for_filter).aggregate(Sum('sum'))
+        return Response("Total income from the last " + str(days_back) + " days is: " + str(sum_of_incomes['sum__sum']))
 
 
 class OutcomeViewSet(viewsets.ModelViewSet):
@@ -130,11 +123,8 @@ class OutcomeViewSet(viewsets.ModelViewSet):
         days_back = request.GET.get('days', 7)
         current_date = datetime.today().date()
         date_for_filter = current_date - timedelta(days=int(days_back))
-        outcomes = Outcome.objects.filter(date__gte=date_for_filter)
-        sum = 0
-        for outcome in outcomes:
-            sum += int(outcome.sum)
-        return Response("Total outcome from the last " + str(days_back) + " days is: " + str(sum))
+        sum_of_outcomes = Outcome.objects.filter(date__gte=date_for_filter).aggregate(Sum('sum'))
+        return Response("Total outcome from the last " + str(days_back) + " days is: " + str(sum_of_outcomes['sum__sum']))
 
 
 class EventViewSet(viewsets.ModelViewSet):
@@ -145,10 +135,7 @@ class EventViewSet(viewsets.ModelViewSet):
         events = Event.objects.filter(date__gte=datetime.today().date())
         current_date = datetime.today().date()
         current_time = datetime.today().time()
-        for event in events:
-            if event.date == current_date:
-                if event.time < current_time:
-                    events = events.exclude(id=event.id)
+        events = Event.objects.filter(date__gte = datetime.today())
         return events
 
     @action(detail=False, methods=['get'])

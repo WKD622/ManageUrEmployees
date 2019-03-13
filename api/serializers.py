@@ -18,7 +18,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Employee
-        fields = ('id', 'first_name', 'last_name', 'pesel', 'position', 'salary')
+        fields = ('pesel', 'first_name', 'last_name', 'position', 'salary', 'hired')
 
 
 class IncomeSerializer(serializers.HyperlinkedModelSerializer):
