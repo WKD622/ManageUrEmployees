@@ -29,11 +29,10 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         number_of_employees = request.GET.get('number_of_employees')
+        employees = Employee.objects.order_by('-salary')
 
-        if number_of_employees is not None:
-            employees = Employee.objects.order_by('-salary')[:int(number_of_employees)]
-        else:
-            employees = Employee.objects.order_by('-salary')
+        if number_of_employees:
+            employees = employees[:int(number_of_employees)]
 
         serializer = self.get_serializer(employees, many=True)
         return Response(serializer.data)
