@@ -124,23 +124,17 @@ class OutcomeViewSet(viewsets.ModelViewSet):
         current_date = datetime.today().date()
         date_for_filter = current_date - timedelta(days=int(days_back))
         sum_of_outcomes = Outcome.objects.filter(date__gte=date_for_filter).aggregate(Sum('sum'))
-        return Response("Total outcome from the last " + str(days_back) + " days is: " + str(sum_of_outcomes['sum__sum']))
+        return Response(
+            "Total outcome from the last " + str(days_back) + " days is: " + str(sum_of_outcomes['sum__sum']))
 
 
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventMiniSerializer
 
-    def get_future_events(self):
-        events = Event.objects.filter(date__gte=datetime.today().date())
-        current_date = datetime.today().date()
-        current_time = datetime.today().time()
-        events = Event.objects.filter(date__gte = datetime.today())
-        return events
-
     @action(detail=False, methods=['get'])
     def future_events(self, request, *args, **kwargs):
-        events = self.get_future_events().order_by('date', 'time')
+        events = Event.objects.future_events()
 
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
@@ -149,20 +143,14 @@ class EventViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def next_event(self, request, *args, **kwargs):
-        event = self.get_future_events().order_by('date', 'time')[:1].get()
+        event = Event.objects.next_event()
 
         serializer = EventSerializer(event, many=False)
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
     def todays_events(self, request, *args, **kwargs):
-        events = Event.objects.filter(date=datetime.today())
-
-        current_time = datetime.today().time()
-        for event in events:
-            if event.time < current_time:
-                events = events.exclude(id=event.id)
-        events = events.order_by('time')
+        events = Event.objects.todays_events()
 
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
