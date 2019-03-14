@@ -73,9 +73,8 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def summary_cost_of_salaries(self, request, *args, **kwargs):
-        result = Employee.objects.aggregate(sum_of_salaries=Sum('salary'))
-        print(result)
-        return Response("Summary cost of all salaries: " + str(result['sum_of_salaries']))
+        sum_of_salaries = Employee.objects.aggregate(sum_of_salaries=Sum('salary'))
+        return Response("Summary cost of all salaries: " + str(sum_of_salaries['sum_of_salaries']))
 
 
 class IncomeViewSet(viewsets.ModelViewSet):
