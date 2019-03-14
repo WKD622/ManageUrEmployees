@@ -1,7 +1,9 @@
 import datetime
+from datetime import timedelta, datetime
 
 from django.contrib.auth.models import User, Group
 from django.db.models import Sum
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -9,8 +11,6 @@ from rest_framework.response import Response
 from api.serializers import UserSerializer, GroupSerializer
 from .models import Employee, Income, Outcome, Event
 from .serializers import EmployeeSerializer, EventMiniSerializer, IncomeSerializer, OutcomeSerializer, EventSerializer
-from datetime import timedelta, datetime
-from django.shortcuts import get_list_or_404, get_object_or_404
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -38,8 +38,6 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(employees, many=True)
         return Response(serializer.data)
 
-    '''Fires employee based on given pesel number'''
-
     @action(detail=True, methods=['get'])
     def fire(self, request, *args, **kwargs):
         employee = self.get_object()
@@ -56,8 +54,6 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         serializer = EmployeeSerializer(employee, many=False)
         return Response(serializer.data)
 
-    # '''promotes\demotes employe based on given pesel number'''
-
     @action(detail=True, methods=['post'])
     def change_position(self, request, *args, **kwargs):
         pesel = request.POST.get('pesel')
@@ -72,11 +68,9 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def summary_cost_of_salaries(self, request, *args, **kwargs):
-        employees = Employee.objects.all()
-        sum_of_salaries = 0
-        for employee in employees:
-            sum_of_salaries += int(employee.salary)
-        return Response("Summary cost of all salaries: " + str(sum_of_salaries))
+        sum_of_salaries = Employee.objects.all().aggregate(Sum('salary'))
+        print(sum_of_salaries)
+        return Response("Summary cost of all salaries: " + str(sum_of_salaries['salary__sum']))
 
 
 class IncomeViewSet(viewsets.ModelViewSet):
