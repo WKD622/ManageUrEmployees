@@ -133,8 +133,6 @@ class EventViewSet(viewsets.ModelViewSet):
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
 
-    '''Returns closest event based on current date and time'''
-
     @action(detail=False, methods=['get'])
     def next_event(self, request, *args, **kwargs):
         event = Event.objects.next_event()

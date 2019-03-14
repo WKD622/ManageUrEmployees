@@ -7,10 +7,10 @@ from django.db import models
 
 class EventsQuerySet(models.QuerySet):
     def future_events(self):
-        return self.filter(date__gte=datetime.today()).order_by('date', 'time')
+        return self.filter(datetime__gte=datetime.today()).order_by('datetime')
 
     def todays_events(self):
-        return self.filter(date=datetime.today()).order_by('date', 'time')
+        return self.filter(datetime=datetime.today()).order_by('datetime')
 
     def next_event(self):
         return self.future_events().first()
@@ -60,7 +60,6 @@ class Outcome(models.Model):
 class Event(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=500, null=True)
-    date = models.DateField(blank=True)
-    time = models.TimeField(null=True)
+    datetime = models.DateTimeField()
 
     objects = EventsManager()

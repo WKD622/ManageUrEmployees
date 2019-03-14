@@ -42,4 +42,4 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
 class EventMiniSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Event
-        fields = ('name', 'date', 'time')
+        fields = ('name', 'datetime')
