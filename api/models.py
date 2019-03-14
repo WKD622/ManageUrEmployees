@@ -10,7 +10,9 @@ class EventsQuerySet(models.QuerySet):
         return self.filter(datetime__gte=datetime.today()).order_by('datetime')
 
     def todays_events(self):
-        return self.filter(datetime=datetime.today()).order_by('datetime')
+        current_date = datetime.today()
+        return self.filter(datetime__year=current_date.year, datetime__month=current_date.month,
+                           datetime__day=current_date.day).order_by('datetime')
 
     def next_event(self):
         return self.future_events().first()

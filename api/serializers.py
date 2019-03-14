@@ -36,7 +36,7 @@ class OutcomeSerializer(serializers.HyperlinkedModelSerializer):
 class EventSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Event
-        fields = ('id', 'name', 'description', 'date', 'time')
+        fields = ('id', 'name', 'description', 'datetime')
 
 
 class EventMiniSerializer(serializers.HyperlinkedModelSerializer):
