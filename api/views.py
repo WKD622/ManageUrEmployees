@@ -98,7 +98,8 @@ class IncomeViewSet(viewsets.ModelViewSet):
         if str(days_back).isdigit():
             current_date = datetime.today().date()
             date_for_filter = current_date - timedelta(days=int(days_back))
-            sum_of_incomes = Income.objects.filter(date__gte=date_for_filter).aggregate(sum_of_incomes=Sum('sum'))['sum_of_incomes']
+            sum_of_incomes = Income.objects.filter(date__gte=date_for_filter).aggregate(sum_of_incomes=Sum('sum'))[
+                'sum_of_incomes']
             if not sum_of_incomes:
                 sum_of_incomes = "0"
             return Response("Total income from the last " + str(days_back) + " days is: " + str(sum_of_incomes))
@@ -125,7 +126,8 @@ class OutcomeViewSet(viewsets.ModelViewSet):
         if str(days_back).isdigit():
             current_date = datetime.today().date()
             date_for_filter = current_date - timedelta(days=int(days_back))
-            sum_of_outcomes = Outcome.objects.filter(date__gte=date_for_filter).aggregate(sum_of_outcomes=Sum('sum'))['sum_of_outcomes']
+            sum_of_outcomes = Outcome.objects.filter(date__gte=date_for_filter).aggregate(sum_of_outcomes=Sum('sum'))[
+                'sum_of_outcomes']
             if not sum_of_outcomes:
                 sum_of_outcomes = "0"
             return Response(

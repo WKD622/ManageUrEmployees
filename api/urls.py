@@ -11,7 +11,6 @@ router.register(r'income', views.IncomeViewSet)
 router.register(r'outcome', views.OutcomeViewSet)
 router.register(r'events', views.EventViewSet)
 
-
 urlpatterns = [
     path('', include(router.urls))
 ]
