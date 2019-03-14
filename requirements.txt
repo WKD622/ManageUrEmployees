@@ -1,4 +1,0 @@
-django
-djangorestframework
-django-filter
-python 3.6
