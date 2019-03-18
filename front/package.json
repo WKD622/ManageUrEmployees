@@ -6,5 +6,8 @@
     "url": "https://github.com/WKD622/ManageUrEmployees/",
     "type": "git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "create-react-app": "^2.1.8"
+  }
 }
