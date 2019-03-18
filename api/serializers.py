@@ -16,6 +16,16 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
+
+    def validate(self, data):
+        if not str(data['pesel']).isdigit() or len(str(data['pesel'])) != 11:
+            raise serializers.ValidationError("wrong pesel")
+        if not str(data['salary']).isdigit():
+            raise serializers.ValidationError("wrong salary format")
+        if not str(data['hired']) in ['True', 'False']:
+            raise serializers.ValidationError("wrong hired parameter")
+        return data
+
     class Meta:
         model = Employee
         fields = ('pesel', 'first_name', 'last_name', 'position', 'salary', 'hired')
