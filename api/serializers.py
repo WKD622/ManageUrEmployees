@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Group
+from django.core.validators import RegexValidator
 from rest_framework import serializers
 from .models import Employee, Income, Outcome, Event
 
@@ -16,16 +17,9 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EmployeeSerializer(serializers.HyperlinkedModelSerializer):
-
-    def validate(self, data):
-        if not str(data['pesel']).isdigit() or len(str(data['pesel'])) != 11:
-            raise serializers.ValidationError("wrong pesel")
-        if not str(data['salary']).isdigit():
-            raise serializers.ValidationError("wrong salary format")
-        if not str(data['hired']) in ['True', 'False']:
-            raise serializers.ValidationError("wrong hired parameter")
-        return data
-
+    alphanumeric = RegexValidator(r'^[0-9]*$', 'Only numeric characters are allowed.')
+    hired = serializers.BooleanField(default=True)
+    pesel = serializers.CharField(max_length=11, min_length=11, validators=[alphanumeric])
     class Meta:
         model = Employee
         fields = ('pesel', 'first_name', 'last_name', 'position', 'salary', 'hired')
