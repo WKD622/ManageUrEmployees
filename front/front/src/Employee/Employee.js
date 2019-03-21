@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import './Employee.css';
 
 const employee = ( props ) => {
@@ -9,6 +9,7 @@ const employee = ( props ) => {
             <p>Salary: {props.salary}</p>
             <p>Pesel: {props.pesel}</p>
             <p>Position: {props.position}</p>
+            <button onClick={() => props.handler(props.index)}>Remove</button>
         </div>
     )
 };
