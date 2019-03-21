@@ -41,7 +41,6 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     def fire(self, request, *args, **kwargs):
         employee = self.get_object()
         employee.hired = False
-        employee.save(update_fields=['hired'])
         serializer = EmployeeSerializer(employee, many=False)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
@@ -51,11 +50,9 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     def hire_again(self, request, *args, **kwargs):
         employee = self.get_object()
         employee.hired = True
-        employee.save(update_fields=['hired'])
-        serializer = EmployeeSerializer(employee, many=False)
+        serializer = EmployeeSerializer(employee)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-        return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def change_position(self, request, *args, **kwargs):
@@ -65,7 +62,6 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         if pesel is not None and new_position is not None:
             employee = get_object_or_404(Employee, pesel=pesel)
             employee.position = new_position
-            employee.save(update_fields=['position'])
             serializer = EmployeeSerializer(employee, many=False)
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
@@ -73,8 +69,8 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def summary_cost_of_salaries(self, request, *args, **kwargs):
-        sum_of_salaries = Employee.objects.aggregate(sum_of_salaries=Sum('salary'))
-        return Response("Summary cost of all salaries: " + str(sum_of_salaries['sum_of_salaries']))
+        sum_of_salaries = Employee.objects.aggregate(sum_of_salaries=Sum('salary')).get('sum_of_salaries', 0)
+        return Response("Summary cost of all salaries: " + str(sum_of_salaries))
 
 
 class IncomeViewSet(viewsets.ModelViewSet):
@@ -98,11 +94,8 @@ class IncomeViewSet(viewsets.ModelViewSet):
         if str(days_back).isdigit():
             current_date = datetime.today().date()
             date_for_filter = current_date - timedelta(days=int(days_back))
-            sum_of_incomes = Income.objects.filter(date__gte=date_for_filter).aggregate(sum_of_incomes=Sum('sum'))[
-                'sum_of_incomes']
-            if not sum_of_incomes:
-                sum_of_incomes = "0"
-            return Response("Total income from the last " + str(days_back) + " days is: " + str(sum_of_incomes))
+            sum_of_incomes = Income.objects.filter(date__gte=date_for_filter).aggregate(sum_of_incomes=Sum('sum')).get('sum_of_incomes', 0)
+            return Response(f"Total income from the last {days_back} days is: {sum_of_incomes}")
         return Response("days parameter should be a number")
 
 
@@ -126,12 +119,10 @@ class OutcomeViewSet(viewsets.ModelViewSet):
         if str(days_back).isdigit():
             current_date = datetime.today().date()
             date_for_filter = current_date - timedelta(days=int(days_back))
-            sum_of_outcomes = Outcome.objects.filter(date__gte=date_for_filter).aggregate(sum_of_outcomes=Sum('sum'))[
-                'sum_of_outcomes']
+            sum_of_outcomes = Outcome.objects.filter(date__gte=date_for_filter).aggregate(sum_of_outcomes=Sum('sum')).get('sum_of_outcomes', 0)
             if not sum_of_outcomes:
                 sum_of_outcomes = "0"
-            return Response(
-                "Total outcome from the last " + str(days_back) + " days is: " + str(sum_of_outcomes))
+            return Response(f"Total outcome from the last {days_back} days is: {sum_of_outcomes}")
         return Response("days parameter should be a number")
 
 
