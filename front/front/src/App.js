@@ -10,9 +10,9 @@ import axios from 'axios'
 class App extends Component {
   state = {
     employees: [
-      { first_name: 'name1', last_name: 'surname1', pesel: 10000000000, position: 'position1', salary: 1000},
-      { first_name: 'name2', last_name: 'surname2', pesel: 20000000000, position: 'position2', salary: 2000},
-      { first_name: 'name3', last_name: 'surname3', pesel: 30000000000, position: 'position3', salary: 3000}
+      // { first_name: 'name1', last_name: 'surname1', pesel: 10000000000, position: 'position1', salary: 1000},
+      // { first_name: 'name2', last_name: 'surname2', pesel: 20000000000, position: 'position2', salary: 2000},
+      // { first_name: 'name3', last_name: 'surname3', pesel: 30000000000, position: 'position3', salary: 3000}
     ],
     events: [
       { name: 'event1', description: 'description1', datetime: '2019-03-20 21:00' },
@@ -32,11 +32,6 @@ class App extends Component {
     showData: false
   };
 
-  // nameChangedHandlder = (event , pesel) => {
-  //     const employee = this.setState.employees.find(pesel);
-  //     console.log(employee.first_name)
-  // }
-
   deleteEmployeeHandler = (employeeIndex) => {
     const employees = this.state.employees.slice();
     employees.splice(employeeIndex, 1);
@@ -50,7 +45,33 @@ class App extends Component {
 
   componentDidMount(){
     axios.get('http://127.0.0.1:8000/api/employees/')
-      .then(response => console.log(response))
+      .then(response => {
+        console.log(response)
+        this.setState({
+          employees: response.data.slice(0,10)
+        })
+      })
+    axios.get('http://127.0.0.1:8000/api/income/')
+      .then(response => {
+        console.log(response)
+        this.setState({
+          incomes: response.data.slice(0,10)
+        })
+      })
+    axios.get('http://127.0.0.1:8000/api/outcome/')
+      .then(response => {
+        console.log(response)
+        this.setState({
+          outcomes: response.data.slice(0,10)
+        })
+      }) 
+    axios.get('http://127.0.0.1:8000/api/events/')
+      .then(response => {
+        console.log(response)
+        this.setState({
+          events: response.data.slice(0,10)
+        })
+      })
   }
 
   render() {
@@ -67,31 +88,50 @@ class App extends Component {
     if ( this.state.showData ) { 
       dataToShow  = (
         <div>
+          <h1>Employees</h1>
           {this.state.employees.map((employee, index) => {
-              return <Employee 
-                key={employee.pesel}
-                first_name={employee.first_name}
-                last_name={employee.last_name}
-                pesel={employee.pesel}
-                position={employee.position}
-                salary={employee.salary}
-                index={index}
-                handler={this.deleteEmployeeHandler} 
-                // changed={() => this.nameChangedHandlder(event, employee.pesel)}
-              /> 
+            return <Employee 
+              key={employee.pesel}
+              first_name={employee.first_name}
+              last_name={employee.last_name}
+              pesel={employee.pesel}
+              position={employee.position}
+              salary={employee.salary}
+              index={index}
+              handler={this.deleteEmployeeHandler}
+            /> 
           })}
-          
-          <Event
-            name={this.state.events[0].name}
-            description={this.state.events[0].description}
-            datetime={this.state.events[0].datetime}
-          />
+    
+          <h1>Events</h1>
+          {this.state.events.map((event, index) => {
+            return <Event
+              key={event.id}
+              name={event.name}
+              description={event.description}
+              datetime={event.datetime}
+            />
+          })}
 
-          <Income
-            name={this.state.incomes[0].name}
-            sum={this.state.incomes[0].sum}
-            date={this.state.incomes[0].date}
+          <h1>Incomes</h1>
+          {this.state.incomes.map((income, index) => {
+            return <Income
+              key={income.id}
+              name={income.name}
+              sum={income.sum}
+              date={income.date}
+            />
+          })}
+            
           />
+          <h1>Outcomes</h1>
+          {this.state.outcomes.map((outcome, index) => {
+            return <Income
+              key={outcome.id}
+              name={outcome.name}
+              sum={outcome.sum}
+              date={outcome.date}
+            />
+          })}
         </div>
       );
     }
