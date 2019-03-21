@@ -5,4 +5,4 @@ from django.apps import AppConfig
 
 
 class HowdyConfig(AppConfig):
-    name = 'manager'
+    name = 'api'
