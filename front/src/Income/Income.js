@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './Income.css';
 
-const income = ( props ) => {
+const income = (props) => {
     return (
         <div className="Income">
             <p>{props.name}</p>
