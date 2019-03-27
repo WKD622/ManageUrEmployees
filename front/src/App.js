@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
-import Employee from './Employee/Employee';
+import Employee from './Employees/Employee/Employee';
 // import Outcome from './Outcome/Outcome';
-import Event from './Event/Event';
-import Income from './Income/Income';
+import Event from './Events/Event/Event';
+import Income from './Incomes/Income/Income';
 import axios from 'axios'
 
 
