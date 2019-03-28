@@ -37,14 +37,21 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(employees, many=True)
         return Response(serializer.data)
 
-    @action(detail=True, methods=['get'])
+
+
+
+    @action(detail=False, methods=['get'])
     def fire(self, request, *args, **kwargs):
+        '''
+            Fires employee based on given pesel number
+        '''
         employee = self.get_object()
         employee.hired = False
         serializer = EmployeeSerializer(employee, many=False)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
+
 
     @action(detail=True, methods=['get'])
     def hire_again(self, request, *args, **kwargs):
@@ -54,8 +61,14 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
+
+
+
     @action(detail=True, methods=['post'])
     def change_position(self, request, *args, **kwargs):
+        '''
+            promotes\demotes employee based on given pesel number
+        '''
         pesel = request.POST.get('pesel')
         new_position = request.POST.get('new_position')
 
@@ -137,8 +150,13 @@ class EventViewSet(viewsets.ModelViewSet):
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
 
+
+
     @action(detail=False, methods=['get'])
     def next_event(self, request, *args, **kwargs):
+        '''
+            Returns closest event based on current date and time
+        '''
         event = Event.objects.next_event()
 
         serializer = EventSerializer(event, many=False)
