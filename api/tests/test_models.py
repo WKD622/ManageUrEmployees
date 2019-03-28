@@ -1,7 +1,6 @@
 import pytest
-from django.utils import timezone
-from .. import factories
-from ..factories import EventFactory, PastEventFactory, FutureEventFactory, TodayEventsFactory
+
+from ..factories import PastEventFactory, FutureEventFactory, TodayEventsFactory
 from ..models import Event
 
 
