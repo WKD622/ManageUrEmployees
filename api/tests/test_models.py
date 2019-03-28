@@ -1,6 +1,6 @@
 import pytest
 from django.utils import timezone
-
+from ..factories import EventFactory, PastEventFactory, FutureEventFactory, TodayEventsFactory
 from ..models import Event
 
 
@@ -9,13 +9,13 @@ def test_future_events():
     # given
     today = timezone.now()
 
-    past_event = Event(name='name1', description='description1', datetime=today - timezone.timedelta(days=1))
+    past_event = PastEventFactory.create()
     past_event.save()
 
     future_events = [
-        Event(name='name2', description='description2', datetime=today + timezone.timedelta(days=1)),
-        Event(name='name2', description='description2', datetime=today + timezone.timedelta(days=30)),
-        Event(name='name3', description='description3', datetime=today + timezone.timedelta(days=360)),
+        FutureEventFactory.create(),
+        FutureEventFactory.create(),
+        FutureEventFactory.create(),
     ]
     for event in future_events:
         event.save()
