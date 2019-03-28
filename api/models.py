@@ -1,16 +1,16 @@
 from __future__ import unicode_literals
 
-from datetime import datetime
+from django.utils import timezone
 
 from django.db import models
 
 
 class EventsQuerySet(models.QuerySet):
     def future_events(self):
-        return self.filter(datetime__gte=datetime.today()).order_by('datetime')
+        return self.filter(datetime__gte=timezone.datetime.today()).order_by('datetime')
 
     def todays_events(self):
-        current_date = datetime.today()
+        current_date = timezone.datetime.today()
         return self.filter(datetime__year=current_date.year, datetime__month=current_date.month,
                            datetime__day=current_date.day).order_by('datetime')
 
@@ -49,13 +49,13 @@ class Employee(models.Model):
 
 class Income(models.Model):
     sum = models.IntegerField(null=True)
-    date = models.DateField(default=datetime.now, blank=True)
+    date = models.DateField(default=timezone.datetime.now, blank=True)
     name = models.CharField(max_length=50)
 
 
 class Outcome(models.Model):
     sum = models.IntegerField(null=True)
-    date = models.DateField(default=datetime.now, blank=True)
+    date = models.DateField(default=timezone.datetime.now, blank=True)
     name = models.CharField(max_length=50)
 
 
