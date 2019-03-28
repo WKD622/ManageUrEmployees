@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './Employee.css';
 
-const employee = ( props ) => {
+const employee = (props) => {
     return (
         <div className="Employee">
             <p>First name: {props.first_name}</p>
