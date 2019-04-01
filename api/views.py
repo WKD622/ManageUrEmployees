@@ -37,9 +37,6 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(employees, many=True)
         return Response(serializer.data)
 
-
-
-
     @action(detail=False, methods=['get'])
     def fire(self, request, *args, **kwargs):
         '''
@@ -52,7 +49,6 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         self.perform_update(serializer)
         return Response(serializer.data)
 
-
     @action(detail=True, methods=['get'])
     def hire_again(self, request, *args, **kwargs):
         employee = self.get_object()
@@ -60,9 +56,6 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         serializer = EmployeeSerializer(employee)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-
-
-
 
     @action(detail=True, methods=['post'])
     def change_position(self, request, *args, **kwargs):
@@ -107,7 +100,8 @@ class IncomeViewSet(viewsets.ModelViewSet):
         if str(days_back).isdigit():
             current_date = datetime.today().date()
             date_for_filter = current_date - timedelta(days=int(days_back))
-            sum_of_incomes = Income.objects.filter(date__gte=date_for_filter).aggregate(sum_of_incomes=Sum('sum')).get('sum_of_incomes', 0)
+            sum_of_incomes = Income.objects.filter(date__gte=date_for_filter).aggregate(sum_of_incomes=Sum('sum')).get(
+                'sum_of_incomes', 0)
             return Response(f"Total income from the last {days_back} days is: {sum_of_incomes}")
         return Response("days parameter should be a number")
 
@@ -132,7 +126,8 @@ class OutcomeViewSet(viewsets.ModelViewSet):
         if str(days_back).isdigit():
             current_date = datetime.today().date()
             date_for_filter = current_date - timedelta(days=int(days_back))
-            sum_of_outcomes = Outcome.objects.filter(date__gte=date_for_filter).aggregate(sum_of_outcomes=Sum('sum')).get('sum_of_outcomes', 0)
+            sum_of_outcomes = Outcome.objects.filter(date__gte=date_for_filter).aggregate(
+                sum_of_outcomes=Sum('sum')).get('sum_of_outcomes', 0)
             if not sum_of_outcomes:
                 sum_of_outcomes = "0"
             return Response(f"Total outcome from the last {days_back} days is: {sum_of_outcomes}")
@@ -149,8 +144,6 @@ class EventViewSet(viewsets.ModelViewSet):
 
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
-
-
 
     @action(detail=False, methods=['get'])
     def next_event(self, request, *args, **kwargs):

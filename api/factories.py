@@ -1,7 +1,5 @@
-import datetime
-
 import factory.fuzzy
-import pytz
+
 from .models import *
 
 
@@ -10,20 +8,21 @@ class EventFactory(factory.Factory):
         model = Event
 
     name = factory.Sequence(lambda n: 'event ' + str(n))
-    description = factory.sequence(lambda n: 'description ' + str(n))
+    description = factory.Sequence(lambda n: 'description ' + str(n))
 
 
 class PastEventFactory(EventFactory):
-    datetime = factory.fuzzy.FuzzyDateTime(datetime.datetime(2011, 8, 15, 8, 15, 12, 0, pytz.UTC),
-                                           (datetime.datetime.today() - datetime.timedelta(days=1)).replace(
-                                               tzinfo=timezone.utc))
+    datetime = factory.fuzzy.FuzzyDateTime((timezone.datetime.today() - timezone.timedelta(days=100000)).replace(
+        tzinfo=timezone.utc),
+        (timezone.datetime.today() - timezone.timedelta(seconds=1)).replace(
+            tzinfo=timezone.utc))
 
 
 class FutureEventFactory(EventFactory):
     datetime = factory.fuzzy.FuzzyDateTime(
-        datetime.datetime.today().replace(tzinfo=timezone.utc) + datetime.timedelta(days=1),
-        datetime.datetime.today().replace(tzinfo=timezone.utc) + datetime.timedelta(days=720))
+        timezone.datetime.today().replace(tzinfo=timezone.utc) + timezone.timedelta(seconds=3),
+        timezone.datetime.today().replace(tzinfo=timezone.utc) + timezone.timedelta(days=720))
 
 
 class TodayEventsFactory(EventFactory):
-    datetime = datetime.datetime.today().replace(tzinfo=timezone.utc)
+    datetime = timezone.datetime.today().replace(tzinfo=timezone.utc)
