@@ -12,7 +12,7 @@ class EventFactory(factory.Factory):
 
 
 class PastEventFactory(EventFactory):
-    datetime = factory.fuzzy.FuzzyDateTime((timezone.datetime.today() - timezone.timedelta(days=100000)).replace(
+    datetime = factory.fuzzy.Fuzzygit DateTime((timezone.datetime.today() - timezone.timedelta(days=100000)).replace(
         tzinfo=timezone.utc),
         (timezone.datetime.today() - timezone.timedelta(seconds=1)).replace(
             tzinfo=timezone.utc))
