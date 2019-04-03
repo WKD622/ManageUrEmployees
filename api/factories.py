@@ -1,6 +1,7 @@
 import factory.fuzzy
 
-from .models import *
+from .models import Event, Employee, Income
+from django.utils import timezone
 
 
 class EventFactory(factory.DjangoModelFactory):
