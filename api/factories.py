@@ -1,9 +1,17 @@
 import factory.fuzzy
-
 from .models import *
+from faker import Faker
+from faker.providers import date_time
 
 
-class EventFactory(factory.Factory):
+class FakeObjects:
+    fake = Faker().add_provider(date_time)
+
+    def get_fake(self):
+        return self.fake
+
+
+class EventFactory(factory.DjangoModelFactory):
     class Meta:
         model = Event
 
