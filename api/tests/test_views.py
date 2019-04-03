@@ -39,20 +39,19 @@ class TestEmployees(TestCase):
         employee.refresh_from_db()
 
         # then
-        assert expected_hired == employee.hired
+        assert employee.hired == expected_hired
 
     @pytest.mark.django_db
     def test_hire_again(self):
         # given
         employee = EmployeeFactory(hired=False)
-        expected_hired = True
 
         # when
         CLIENT.get(_url_detail(EMPLOYEES, employee.pesel, 'hire_again'))
         employee.refresh_from_db()
 
         # then
-        assert expected_hired == employee.hired
+        assert employee.hired
 
     @pytest.mark.django_db
     def test_change_position(self):
@@ -65,7 +64,7 @@ class TestEmployees(TestCase):
         employee.refresh_from_db()
 
         # then
-        assert expected_position == employee.position
+        assert employee.position == expected_position
 
     @pytest.mark.django_db
     def test_summary_cost_of_salaries(self):
@@ -82,7 +81,7 @@ class TestEmployees(TestCase):
         sum_of_salaries = int(CLIENT.get(_url_not_detail(EMPLOYEES, 'summary_cost_of_salaries')).content)
 
         # then
-        assert expected_sum_of_salaries == sum_of_salaries
+        assert sum_of_salaries == expected_sum_of_salaries
 
 
 class TestIncomes(TestCase):
@@ -100,7 +99,7 @@ class TestIncomes(TestCase):
         incomes_number = len(json.loads(response.content))
 
         # then
-        assert expected_incomes_number == incomes_number
+        assert incomes_number == expected_incomes_number
 
     @pytest.mark.django_db
     def test_sum(self):
@@ -117,7 +116,7 @@ class TestIncomes(TestCase):
         sum_of_sums = int(CLIENT.get(_url_not_detail(INCOMES, "sum")).content)
 
         # then
-        assert expected_sum_of_sums == sum_of_sums
+        assert sum_of_sums == expected_sum_of_sums
 
 
 class TestEvents(TestCase):
@@ -134,7 +133,7 @@ class TestEvents(TestCase):
         number_of_future_events = len(json.loads(response.content))
 
         # then
-        assert expected_number_of_future_events == number_of_future_events
+        assert number_of_future_events == expected_number_of_future_events
 
     @pytest.mark.django_db
     def test_todays_events(self):
@@ -151,4 +150,4 @@ class TestEvents(TestCase):
         number_of_todays_events = len(json.loads(response.content))
 
         # then
-        assert expected_number_of_todays_events == number_of_todays_events
+        assert number_of_todays_events == expected_number_of_todays_events
