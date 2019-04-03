@@ -1,14 +1,6 @@
 import factory.fuzzy
+
 from .models import *
-from faker import Faker
-from faker.providers import date_time
-
-
-class FakeObjects:
-    fake = Faker().add_provider(date_time)
-
-    def get_fake(self):
-        return self.fake
 
 
 class EventFactory(factory.DjangoModelFactory):
@@ -20,17 +12,38 @@ class EventFactory(factory.DjangoModelFactory):
 
 
 class PastEventFactory(EventFactory):
-    datetime = factory.fuzzy.Fuzzygit DateTime((timezone.datetime.today() - timezone.timedelta(days=100000)).replace(
-        tzinfo=timezone.utc),
-        (timezone.datetime.today() - timezone.timedelta(seconds=1)).replace(
-            tzinfo=timezone.utc))
+    datetime = factory.fuzzy.FuzzyDateTime(
+        (timezone.now() - timezone.timedelta(days=100000)),
+        (timezone.now() - timezone.timedelta(seconds=1))
+    )
 
 
 class FutureEventFactory(EventFactory):
     datetime = factory.fuzzy.FuzzyDateTime(
-        timezone.datetime.today().replace(tzinfo=timezone.utc) + timezone.timedelta(seconds=3),
-        timezone.datetime.today().replace(tzinfo=timezone.utc) + timezone.timedelta(days=720))
+        timezone.now() + timezone.timedelta(seconds=3),
+        timezone.now() + timezone.timedelta(days=720))
 
 
-class TodayEventsFactory(EventFactory):
-    datetime = timezone.datetime.today().replace(tzinfo=timezone.utc)
+class TodaysEventsFactory(EventFactory):
+    datetime = timezone.now()
+
+
+class EmployeeFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Employee
+
+    first_name = factory.Sequence(lambda n: 'first_name ' + str(n))
+    last_name = factory.Sequence(lambda n: 'last_name ' + str(n))
+    pesel = factory.fuzzy.FuzzyText(length=11, chars='0123456789')
+    position = factory.Sequence(lambda n: 'position ' + str(n))
+    salary = factory.fuzzy.FuzzyInteger(1000, 10000)
+
+
+class IncomeFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Income
+
+    sum = factory.fuzzy.FuzzyInteger(100, 1000)
+    date = factory.fuzzy.FuzzyDate(timezone.now() - timezone.timedelta(days=360),
+                                   timezone.now() - timezone.timedelta(seconds=1))
+    name = factory.Sequence(lambda n: 'name ' + str(n))

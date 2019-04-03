@@ -3,7 +3,6 @@ from datetime import timedelta, datetime
 
 from django.contrib.auth.models import User, Group
 from django.db.models import Sum
-from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -37,46 +36,43 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(employees, many=True)
         return Response(serializer.data)
 
-    @action(detail=False, methods=['get'])
+    @action(detail=True, methods=['get'])
     def fire(self, request, *args, **kwargs):
         '''
             Fires employee based on given pesel number
         '''
         employee = self.get_object()
         employee.hired = False
-        serializer = EmployeeSerializer(employee, many=False)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
+        employee.save()
+
+        serializer = EmployeeSerializer(instance=employee, many=False)
         return Response(serializer.data)
 
     @action(detail=True, methods=['get'])
     def hire_again(self, request, *args, **kwargs):
         employee = self.get_object()
         employee.hired = True
-        serializer = EmployeeSerializer(employee)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
+        employee.save()
 
-    @action(detail=True, methods=['post'])
+        serializer = EmployeeSerializer(employee)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['put', 'patch'])
     def change_position(self, request, *args, **kwargs):
         '''
-            promotes\demotes employee based on given pesel number
+        promotes\demotes employee based on given pesel number
         '''
-        pesel = request.POST.get('pesel')
-        new_position = request.POST.get('new_position')
+        employee = self.get_object()
+        serializer = EmployeeSerializer(employee, data=request.POST, partial=True)
+        serializer.is_valid(raise_exception=True)
 
-        if pesel is not None and new_position is not None:
-            employee = get_object_or_404(Employee, pesel=pesel)
-            employee.position = new_position
-            serializer = EmployeeSerializer(employee, many=False)
-            serializer.is_valid(raise_exception=True)
-            self.perform_update(serializer)
-            return Response(serializer.data)
+        self.perform_update(serializer)
+        return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
     def summary_cost_of_salaries(self, request, *args, **kwargs):
         sum_of_salaries = Employee.objects.aggregate(sum_of_salaries=Sum('salary')).get('sum_of_salaries', 0)
-        return Response("Summary cost of all salaries: " + str(sum_of_salaries))
+        return Response(sum_of_salaries)
 
 
 class IncomeViewSet(viewsets.ModelViewSet):
@@ -91,7 +87,7 @@ class IncomeViewSet(viewsets.ModelViewSet):
         if number_of_incomes_to_show:
             incomes = incomes[:int(number_of_incomes_to_show)]
 
-        serializer = EventSerializer(incomes, many=True)
+        serializer = IncomeSerializer(incomes, many=True)
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
@@ -102,7 +98,7 @@ class IncomeViewSet(viewsets.ModelViewSet):
             date_for_filter = current_date - timedelta(days=int(days_back))
             sum_of_incomes = Income.objects.filter(date__gte=date_for_filter).aggregate(sum_of_incomes=Sum('sum')).get(
                 'sum_of_incomes', 0)
-            return Response(f"Total income from the last {days_back} days is: {sum_of_incomes}")
+            return Response(sum_of_incomes)
         return Response("days parameter should be a number")
 
 
@@ -130,7 +126,7 @@ class OutcomeViewSet(viewsets.ModelViewSet):
                 sum_of_outcomes=Sum('sum')).get('sum_of_outcomes', 0)
             if not sum_of_outcomes:
                 sum_of_outcomes = "0"
-            return Response(f"Total outcome from the last {days_back} days is: {sum_of_outcomes}")
+            return Response(sum_of_outcomes)
         return Response("days parameter should be a number")
 
 
