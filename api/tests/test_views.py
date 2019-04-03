@@ -148,7 +148,7 @@ class TestEvents(TestCase):
 
         # when
         response = CLIENT.get(_url_not_detail(EVENTS, 'todays_events'))
-        number_of_todays_events_db = len(json.loads(response.content))
+        number_of_todays_events = len(json.loads(response.content))
 
         # then
-        assert expected_number_of_todays_events == number_of_todays_events_db
+        assert expected_number_of_todays_events == number_of_todays_events
