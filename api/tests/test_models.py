@@ -1,13 +1,13 @@
 import pytest
 
-from ..factories import PastEventFactory, FutureEventFactory, TodayEventsFactory
+from ..factories import PastEventFactory, FutureEventFactory, TodaysEventsFactory
 from ..models import Event
 
 
 @pytest.mark.django_db
 def test_future_events():
     # given
-    past_event = PastEventFactory()
+    PastEventFactory()
 
     future_events = FutureEventFactory.create_batch(3)
 
@@ -21,9 +21,9 @@ def test_future_events():
 @pytest.mark.django_db
 def test_todays_events():
     # given
-    past_event = PastEventFactory()
-    todays_event = TodayEventsFactory()
-    future_event = FutureEventFactory()
+    PastEventFactory()
+    todays_event = TodaysEventsFactory()
+    FutureEventFactory()
 
     # when
     manager_events = list(Event.objects.todays_events())
