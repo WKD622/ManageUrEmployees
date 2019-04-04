@@ -41,36 +41,43 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     def fire(self, request, *args, **kwargs):
         employee = self.get_object()
         employee.hired = False
-        serializer = EmployeeSerializer(employee, many=False)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
+        employee.save(update_fields=['hired'])
+        serializer = EmployeeSerializer(employee)
         return Response(serializer.data)
 
     @action(detail=True, methods=['get'])
     def hire_again(self, request, *args, **kwargs):
         employee = self.get_object()
         employee.hired = True
+        employee.save(update_fields=['hired'])
         serializer = EmployeeSerializer(employee)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-    @action(detail=True, methods=['post'])
-    def change_position(self, request, *args, **kwargs):
-        pesel = request.POST.get('pesel')
-        new_position = request.POST.get('new_position')
-
-        if pesel is not None and new_position is not None:
-            employee = get_object_or_404(Employee, pesel=pesel)
-            employee.position = new_position
-            serializer = EmployeeSerializer(employee, many=False)
-            serializer.is_valid(raise_exception=True)
-            self.perform_update(serializer)
-            return Response(serializer.data)
+        return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
     def summary_cost_of_salaries(self, request, *args, **kwargs):
         sum_of_salaries = Employee.objects.aggregate(sum_of_salaries=Sum('salary')).get('sum_of_salaries', 0)
         return Response("Summary cost of all salaries: " + str(sum_of_salaries))
+
+    @action(detail=False, methods=['get'])
+    def hired(self, request, *args, **kwargs):
+        hired_employees = Employee.objects.hired()
+        serializer = EmployeeSerializer(hired_employees, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def fired(self, request, *args, **kwargs):
+        fired_employees = Employee.objects.fired()
+        serializer = EmployeeSerializer(fired_employees, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def make_all_hired(self, request, *args, **kwargs):
+        employees = Employee.objects.all()
+        for employee in employees:
+            employee.hired = True
+            employee.save()
+        serializer = EmployeeSerializer(employees, many=True)
+        return Response(serializer.data)
 
 
 class IncomeViewSet(viewsets.ModelViewSet):
@@ -94,7 +101,8 @@ class IncomeViewSet(viewsets.ModelViewSet):
         if str(days_back).isdigit():
             current_date = datetime.today().date()
             date_for_filter = current_date - timedelta(days=int(days_back))
-            sum_of_incomes = Income.objects.filter(date__gte=date_for_filter).aggregate(sum_of_incomes=Sum('sum')).get('sum_of_incomes', 0)
+            sum_of_incomes = Income.objects.filter(date__gte=date_for_filter).aggregate(sum_of_incomes=Sum('sum')).get(
+                'sum_of_incomes', 0)
             return Response(f"Total income from the last {days_back} days is: {sum_of_incomes}")
         return Response("days parameter should be a number")
 
@@ -119,7 +127,8 @@ class OutcomeViewSet(viewsets.ModelViewSet):
         if str(days_back).isdigit():
             current_date = datetime.today().date()
             date_for_filter = current_date - timedelta(days=int(days_back))
-            sum_of_outcomes = Outcome.objects.filter(date__gte=date_for_filter).aggregate(sum_of_outcomes=Sum('sum')).get('sum_of_outcomes', 0)
+            sum_of_outcomes = Outcome.objects.filter(date__gte=date_for_filter).aggregate(
+                sum_of_outcomes=Sum('sum')).get('sum_of_outcomes', 0)
             if not sum_of_outcomes:
                 sum_of_outcomes = "0"
             return Response(f"Total outcome from the last {days_back} days is: {sum_of_outcomes}")

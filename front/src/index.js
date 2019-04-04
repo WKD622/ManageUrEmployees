@@ -11,7 +11,6 @@ import Bar from './LinksUpperBar/Bar'
 import {Route, Link, BrowserRouter as Router} from 'react-router-dom'
 import * as serviceWorker from './serviceWorker';
 
-
 const routing = (
     <Router>
         <div>
