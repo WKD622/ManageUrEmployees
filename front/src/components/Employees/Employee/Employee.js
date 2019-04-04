@@ -3,7 +3,7 @@ import './Employee.css';
 
 const employee = (props) => {
     return (
-        <div className="Employee" style={style}>
+        <div className="Employee">
             <p>First name: {props.first_name}</p>
             <p>Last name: {props.last_name}</p>
             <p>Salary: {props.salary}</p>
