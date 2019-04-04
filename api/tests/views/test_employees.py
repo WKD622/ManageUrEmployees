@@ -1,4 +1,5 @@
 import pytest
+import json
 
 from . import url
 from ...factories import EmployeeFactory
@@ -36,9 +37,10 @@ def test_change_position(client):
     # given
     expected_position = "new position"
     employee = EmployeeFactory()
+    data = json.dumps({'position': expected_position})
 
     # when
-    client.patch(url.url_detail(url.EMPLOYEES, employee.pesel, 'change_position'), {'position': expected_position})
+    client.patch(url.url_detail(url.EMPLOYEES, employee.pesel, 'change_position'), data)
     employee.refresh_from_db()
 
     # then
