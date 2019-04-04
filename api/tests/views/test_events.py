@@ -42,5 +42,5 @@ def test_todays_events(client):
         todays_events.append(x['id'])
 
     # then
-    assert set(todays_events) == {x.id for x in expected_todays_events} and expected_number_of_todays_events == len(
-        todays_events)
+    assert expected_number_of_todays_events == len(todays_events)
+    assert set(todays_events) == {x.id for x in expected_todays_events}

@@ -31,19 +31,23 @@ def test_hire_again(client):
     assert employee.hired
 
 
-# @pytest.mark.django_db
-# def test_change_position(client):
-#     # given
-#     expected_position = "new position"
-#     employee = EmployeeFactory()
-#     data = json.dumps({'position': expected_position})
-#
-#     # when
-#     client.patch(url.url_detail(url.EMPLOYEES, employee.pesel, 'change_position'), data)
-#     employee.refresh_from_db()
-#
-#     # then
-#     assert employee.position == expected_position
+@pytest.mark.django_db
+def test_change_position(client):
+    # given
+    expected_position = "new position"
+    employee = EmployeeFactory()
+    data = {'position': expected_position}
+
+    # when
+    response = client.patch(
+        url.url_detail(url.EMPLOYEES, employee.pesel, 'change_position'),
+        data=data, content_type='application/json')
+    employee.refresh_from_db()
+
+    # then
+    assert response.status_code == 200
+    assert response.data['position'] == expected_position
+    assert employee.position == expected_position
 
 
 @pytest.mark.django_db

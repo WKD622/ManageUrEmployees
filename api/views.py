@@ -63,7 +63,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         promotes\demotes employee based on given pesel number
         '''
         employee = self.get_object()
-        serializer = EmployeeSerializer(employee, data=request.POST, partial=True)
+        serializer = EmployeeSerializer(employee, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
 
         self.perform_update(serializer)
