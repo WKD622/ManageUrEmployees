@@ -9,11 +9,8 @@ import Outcomes from './components/Outcomes/Outcomes'
 import './components/LinksUpperBar/Bar.css'
 import {Route, Link, BrowserRouter as Router} from 'react-router-dom'
 import * as serviceWorker from './serviceWorker';
-import {createStore} from 'redux';
-import {Provider} from 'react-redux';
-import employeeReducer from './reducers/employeeReducer'
-
-const store = createStore(employeeReducer);
+import { Provider } from 'react-redux';
+import store from "./store"
 
 
 const routing = (
