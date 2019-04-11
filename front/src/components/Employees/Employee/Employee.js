@@ -13,8 +13,8 @@ class Employee extends Component {
         this.setState({showForm: !doesShow});
     };
 
-    handleChange = (employee) => {
-        store.dispatch(editEmployee(employee.target.value))
+    handleChange = (event) => {
+        store.dispatch(editEmployee(event.target.elements))
     };
 
     render() {
@@ -44,31 +44,31 @@ class Employee extends Component {
                 <p>
                     <label>
                         First name:
-                        <input type="text" defaultValue={this.props.first_name}/>
+                        <input name="first_name" type="text" defaultValue={this.props.first_name}/>
                     </label>
                 </p>
                 <p>
                     <label>
                         Last name:
-                        <input type="text" defaultValue={this.props.last_name}/>
+                        <input name="last_name" type="text" defaultValue={this.props.last_name}/>
                     </label>
                 </p>
                 <p>
                     <label>
                         Salary:
-                        <input type="text" defaultValue={this.props.salary}/>
+                        <input name="salary" type="text" defaultValue={this.props.salary}/>
                     </label>
                 </p>
                 <p>
                     <label>
                         Pesel:
-                        <input type="text" defaultValue={this.props.pesel}/>
+                        <input name="pesel" type="text" defaultValue={this.props.pesel}/>
                     </label>
                 </p>
                 <p>
                     <label>
                         Position:
-                        <input type="text" defaultValue={this.props.position}/>
+                        <input name="position" type="text" defaultValue={this.props.position}/>
                     </label>
                 </p>
 

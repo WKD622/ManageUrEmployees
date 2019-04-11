@@ -24,9 +24,23 @@ export default (state = initialState, {type, data}) => {
                 errors: state.errors
             };
         case EDIT_EMPLOYEE:
-            let employeePeselToEdit = data.employee.pesel;
+            console.log(data.employee);
+            let first_name = data.employee.first_name.value;
+            let last_name = data.employee.last_name.value;
+            let pesel = data.employee.pesel.value;
+            let position = data.employee.position.value;
+            let salary = data.employee.position.value;
+
+            const edited_employee = {
+                first_name: first_name,
+                last_name: last_name,
+                pesel: pesel,
+                position: position,
+                salary: salary,
+            };
+            console.log(edited_employee);
             return {
-                data: [...state.data.filter(employee => employee.pesel !== employeePeselToEdit), data.employee],
+                data: [...state.data.filter(employee => employee.pesel !== pesel)],
                 errors: state.errors
             };
         default:
