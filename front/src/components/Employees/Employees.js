@@ -2,14 +2,20 @@ import React, {Component} from 'react';
 import Employee from './Employee/Employee';
 import './Employees.css'
 import {connect} from 'react-redux'
-import {requestApiData} from "../../actions";
-import {bindActionCreators} from "redux";
+import {removeEmployee, addEmployee} from "../../actions";
+import store from '../../store'
 
 class Employees extends Component {
 
-    componentDidMount() {
-        this.props.requestApiData();
-    }
+    handleDelete = (pesel) => {
+        store.dispatch(removeEmployee(pesel))
+    };
+
+
+    handleAdd = (employee) => {
+        store.dispatch(addEmployee(employee))
+    };
+
 
     person = (employee, index) => (
         <div className={Employees}>{
@@ -21,26 +27,20 @@ class Employees extends Component {
                 position={employee.position}
                 salary={employee.salary}
                 index={index}
+                handler={this.handleDelete}
             />
         }
         </div>
     );
 
     render() {
-        const {results = []} = this.props.employees;
-        console.log(this.props);
+        const {employees} = this.props;
         return (
-            <h1>
-                Employees
-                {results.map(this.person)}
-            </h1>
+            employees.data.map((employee, index) => this.person(employee, index))
         )
     }
 }
 
-const mapStateToProps = (state) => ({employees: state.employees });
+const mapStateToProps = (state) => ({employees: state.employees});
 
-const mapDispatchToProps = dispatch =>
-    bindActionCreators({requestApiData}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(Employees);
+export default connect(mapStateToProps)(Employees);
