@@ -8,6 +8,7 @@ import store from '../../store'
 class Events extends Component {
 
     handleDelete = (id) => {
+        console.log(id);
         store.dispatch(removeEvent(id))
     };
 
@@ -22,15 +23,17 @@ class Events extends Component {
             <Event
                 name={event.name}
                 description={event.description}
-                data={event.datetime}
+                datetime={event.datetime}
                 handler={this.handleDelete}
                 key={event.id}
+                id={event.id}
             />
         }
         </div>
     );
 
     render() {
+        console.log(this.props);
         const {events} = this.props;
         return (
             events.data.map((event, index) => this.event(event, index))

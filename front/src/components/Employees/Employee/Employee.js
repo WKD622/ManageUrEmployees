@@ -44,31 +44,31 @@ class Employee extends Component {
                 <p>
                     <label>
                         First name:
-                        <input type="text" value={this.props.first_name}/>
+                        <input type="text" defaultValue={this.props.first_name}/>
                     </label>
                 </p>
                 <p>
                     <label>
                         Last name:
-                        <input type="text" value={this.props.last_name}/>
+                        <input type="text" defaultValue={this.props.last_name}/>
                     </label>
                 </p>
                 <p>
                     <label>
                         Salary:
-                        <input type="text" value={this.props.salary}/>
+                        <input type="text" defaultValue={this.props.salary}/>
                     </label>
                 </p>
                 <p>
                     <label>
                         Pesel:
-                        <input type="text" value={this.props.pesel}/>
+                        <input type="text" defaultValue={this.props.pesel}/>
                     </label>
                 </p>
                 <p>
                     <label>
                         Position:
-                        <input type="text" value={this.props.position}/>
+                        <input type="text" defaultValue={this.props.position}/>
                     </label>
                 </p>
 

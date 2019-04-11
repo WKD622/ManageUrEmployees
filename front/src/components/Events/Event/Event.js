@@ -18,6 +18,7 @@ class Event extends Component {
     };
 
     render() {
+
         let event = <div className="Event">
             <p>
                 Name: {this.props.name}
@@ -32,25 +33,24 @@ class Event extends Component {
             <button onClick={() => this.hide()}>Edit</button>
         </div>;
 
-
         if (this.state.showForm) {
             event = <form className={"Event"} onSubmit={this.handleChange}>
                 <p>
                     <label>
                         Name:
-                        <input type="text" value={this.props.name}/>
+                        <input type="text" defaultValue={this.props.name}/>
                     </label>
                 </p>
                 <p>
                     <label>
                         Description:
-                        <input type="text" value={this.props.description}/>
+                        <input type="text" defaultValue={this.props.description}/>
                     </label>
                 </p>
                 <p>
                     <label>
                         Date, time:
-                        <input type="text" value={this.props.datetime}/>
+                        <input type="text" defaultValue={this.props.datetime}/>
                     </label>
                 </p>
                 <input type="submit" value="Save"/>
@@ -62,7 +62,7 @@ class Event extends Component {
                 {event}
             </div>
         )
-
     }
 }
+
 export default Event
