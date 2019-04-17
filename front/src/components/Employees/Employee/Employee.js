@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import './Employee.css';
-import store from '../../../store'
-import {requestEditEmployee} from "../../../actions/employees_actions";
 import {putEmployee} from "../../../api/employees_api";
 
 class Employee extends Component {

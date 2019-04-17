@@ -11,7 +11,7 @@ import store from '../store'
 
 export function fetchEmployees() {
     return function (dispatch) {
-        // console.log(dispatch);
+        console.log(dispatch);
         dispatch(requestApiDataEmployees());
         return fetch('http://127.0.0.1:8000/api/employees/')
             .then(
