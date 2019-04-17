@@ -43,4 +43,4 @@ class addNewEmployee extends Component {
     }
 }
 
-export default addNewEmployee
+export default addNewEmployee;
