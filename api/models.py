@@ -66,7 +66,7 @@ class EmployeesManager(models.Manager):
 class Employee(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    pesel = models.CharField(max_length=11, primary_key=True)
+    pesel = models.CharField(max_length=11, primary_key=True, unique=True)
     position = models.CharField(max_length=50, null=True)
     salary = models.IntegerField(null=True)
     hired = models.BooleanField(default=True)

@@ -11,9 +11,14 @@ export const receiveAddEmployee = (employee) => ({
     }
 });
 
-export const REMOVE_EMPLOYEE = "REMOVE_EMPLOYEE";
-export const removeEmployee = (pesel) => ({
-    type: REMOVE_EMPLOYEE,
+export const REQUEST_REMOVE_EMPLOYEE = "REQUEST_REMOVE_EMPLOYEE";
+export const requestRemoveEmployee = () => ({
+    type: REQUEST_REMOVE_EMPLOYEE,
+});
+
+export const RECEIVE_REMOVE_EMPLOYEE = "RECEIVE_REMOVE_EMPLOYEE";
+export const receiveRemoveEmployee = (pesel) => ({
+    type: RECEIVE_REMOVE_EMPLOYEE,
     data: {
         pesel,
     }

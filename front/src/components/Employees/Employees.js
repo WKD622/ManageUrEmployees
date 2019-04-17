@@ -2,18 +2,14 @@ import React, {Component} from 'react';
 import Employee from './Employee/Employee';
 import './Employees.css'
 import {connect} from 'react-redux'
-
-import store from '../../store'
+import {deleteEmployee} from "../../api/employees_api";
+import addNewEmployee from "./addNewEmployee"
 
 class Employees extends Component {
 
     handleDelete = (pesel) => {
+        deleteEmployee(pesel)
     };
-
-
-    handleAdd = (employee) => {
-    };
-
 
     person = (employee, index) => (
         <div className={Employees}>{
@@ -34,7 +30,10 @@ class Employees extends Component {
     render() {
         const {employees} = this.props;
         return (
-            employees.data.map((employee, index) => this.person(employee, index))
+            <div>
+                <addNewEmployee/>
+                {employees.data.map((employee, index) => this.person(employee, index))}
+            </div>
         )
     }
 }

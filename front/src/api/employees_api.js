@@ -6,6 +6,8 @@ import {
     receiveEditEmployee,
     receiveAddEmployee,
     requestAddEmployee,
+    requestRemoveEmployee,
+    receiveRemoveEmployee,
 } from "../actions/employees_actions";
 import store from '../store'
 
@@ -57,5 +59,24 @@ export function postEmployee(employee) {
         )
         .then(
             store.dispatch(receiveAddEmployee(employee))
+        )
+}
+
+
+export function deleteEmployee(pesel) {
+    store.dispatch(requestRemoveEmployee());
+    return fetch('http://127.0.0.1:8000/api/employees/' + pesel + '/', {
+        method: 'DELETE',
+        body: JSON.stringify(pesel), // data can be `string` or {object}!
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(
+            response => response.json(),
+            error => console.log('An error occured', error)
+        )
+        .then(
+            store.dispatch(receiveRemoveEmployee(pesel))
         )
 }
