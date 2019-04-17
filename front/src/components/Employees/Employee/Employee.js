@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import './Employee.css';
 import store from '../../../store'
-import {editEmployee} from "../../../actions";
+import {requestEditEmployee} from "../../../actions/employees_actions";
+import {putEmployee} from "../../../api/employees_api";
 
 class Employee extends Component {
     state = {
@@ -14,7 +15,22 @@ class Employee extends Component {
     };
 
     handleChange = (event) => {
-        store.dispatch(editEmployee(event.target.elements))
+        event.preventDefault();
+        this.hide();
+        let first_name = event.target.elements.first_name.value;
+        let last_name = event.target.elements.last_name.value;
+        let pesel = event.target.elements.pesel.value;
+        let position = event.target.elements.position.value;
+        let salary = event.target.elements.salary.value;
+
+        const employee = {
+            first_name: first_name,
+            last_name: last_name,
+            pesel: pesel,
+            position: position,
+            salary: salary,
+        };
+        putEmployee(employee);
     };
 
     render() {

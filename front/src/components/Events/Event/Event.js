@@ -1,7 +1,7 @@
 import './Event.css';
 import React, {Component} from 'react';
 import store from '../../../store'
-import {editEvent} from "../../../actions";
+import {editEvent} from "../../../actions/events_actions";
 
 class Event extends Component {
     state = {

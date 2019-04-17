@@ -39,3 +39,4 @@ const addNewEmployee = () => {
         </form>
     )
 };
+export default addNewEmployee()

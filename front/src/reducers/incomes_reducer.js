@@ -1,4 +1,4 @@
-import {RECEIVE_API_DATA_INCOMES} from "../actions";
+import {RECEIVE_API_DATA_INCOMES} from "../actions/incomes_actions";
 
 const initialState = {
     data: [

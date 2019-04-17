@@ -1,4 +1,4 @@
-import {RECEIVE_API_DATA_OUTCOMES} from "../actions";
+import {RECEIVE_API_DATA_OUTCOMES} from "../actions/outcomes_actions";
 
 const initialState = {
     data: [

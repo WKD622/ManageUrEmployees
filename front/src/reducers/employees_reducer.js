@@ -1,35 +1,53 @@
-import {ADD_NEW_EMPLOYEE, REMOVE_EMPLOYEE, EDIT_EMPLOYEE} from "../actions";
+import {
+    REQUEST_ADD_NEW_EMPLOYEE,
+    REMOVE_EMPLOYEE,
+    REQUEST_EDIT_EMPLOYEE,
+    RECEIVE_API_DATA_EMPLOYEES,
+    REQUEST_API_DATA_EMPLOYEES, RECEIVE_EDIT_EMPLOYEE, RECEIVE_ADD_NEW_EMPLOYEE,
+} from "../actions/employees_actions";
 
 const initialState = {
-    data: [
-        {first_name: 'name1', last_name: 'surname1', pesel: 10000000000, position: 'position1', salary: 1000},
-        {first_name: 'name2', last_name: 'surname2', pesel: 20000000000, position: 'position2', salary: 2000},
-        {first_name: 'name3', last_name: 'surname3', pesel: 30000000000, position: 'position3', salary: 3000}
-    ],
+    isFetching: false,
+    didInvalidate: false,
+    data: [],
     errors: {},
 };
 
 
 export default (state = initialState, {type, data}) => {
     switch (type) {
-        case ADD_NEW_EMPLOYEE:
-            return {
-                data: [...state.data, data.employee],
-                errors: state.errors,
-            };
+        case REQUEST_ADD_NEW_EMPLOYEE:
+            return Object.assign({}, state, {
+                isFetching: true,
+                didInvalidate: false,
+            });
+
+        case RECEIVE_ADD_NEW_EMPLOYEE:
+            return Object.assign({}, state, {
+                isFetching: true,
+                didInvalidate: false,
+                // data: [...state]
+            });
+
         case REMOVE_EMPLOYEE:
             let employeePeselToDelete = data.pesel;
             return {
                 data: [...state.data.filter(employee => employee.pesel !== employeePeselToDelete)],
                 errors: state.errors
             };
-        case EDIT_EMPLOYEE:
-            console.log(data.employee);
-            let first_name = data.employee.first_name.value;
-            let last_name = data.employee.last_name.value;
-            let pesel = data.employee.pesel.value;
-            let position = data.employee.position.value;
-            let salary = data.employee.position.value;
+        case REQUEST_EDIT_EMPLOYEE:
+            return Object.assign({}, state, {
+                isFetching: false,
+                didInvalidate: false,
+                data: [...state.data]
+            });
+
+        case RECEIVE_EDIT_EMPLOYEE:
+            let first_name = data.employee.first_name;
+            let last_name = data.employee.last_name;
+            let pesel = data.employee.pesel;
+            let position = data.employee.position;
+            let salary = data.employee.salary;
 
             const edited_employee = {
                 first_name: first_name,
@@ -38,11 +56,24 @@ export default (state = initialState, {type, data}) => {
                 position: position,
                 salary: salary,
             };
-            console.log(edited_employee);
-            return {
-                data: [...state.data.filter(employee => employee.pesel !== pesel)],
-                errors: state.errors
-            };
+
+            return Object.assign({}, state, {
+                isFetching: false,
+                didInvalidate: false,
+                data: [...state.data.filter(employee => employee.pesel !== pesel), edited_employee]
+            });
+
+        case RECEIVE_API_DATA_EMPLOYEES:
+            return Object.assign({}, state, {
+                isFetching: false,
+                didInvalidate: false,
+                data: [...data.employees]
+            });
+        case REQUEST_API_DATA_EMPLOYEES:
+            return Object.assign({}, state, {
+                isFetching: true,
+                didInvalidate: false
+            });
         default:
             return state || [];
     }

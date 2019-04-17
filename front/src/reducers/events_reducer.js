@@ -1,4 +1,4 @@
-import {ADD_NEW_EVENT, REMOVE_EVENT, EDIT_EVENT} from "../actions";
+import {ADD_NEW_EVENT, REMOVE_EVENT, EDIT_EVENT} from "../actions/events_actions";
 
 const initialState = {
     data: [

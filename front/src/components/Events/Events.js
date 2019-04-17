@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Event from './Event/Event';
 import './Events.css'
 import {connect} from 'react-redux'
-import {removeEvent, addEvent} from "../../actions";
+import {removeEvent, addEvent} from "../../actions/events_actions";
 import store from '../../store'
 
 class Events extends Component {
