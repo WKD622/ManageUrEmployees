@@ -36,6 +36,24 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(employees, many=True)
         return Response(serializer.data)
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        #
+        # to_compare = Employee.objects.filter(pesel__exact=instance.pesel)[0]
+        # if to_compare.first_name == instance.first_name and to_compare.first_name ==
+
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
+
     @action(detail=True, methods=['get'])
     def fire(self, request, *args, **kwargs):
         '''
@@ -73,6 +91,27 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     def summary_cost_of_salaries(self, request, *args, **kwargs):
         sum_of_salaries = Employee.objects.aggregate(sum_of_salaries=Sum('salary')).get('sum_of_salaries', 0)
         return Response(sum_of_salaries)
+
+    @action(detail=False, methods=['get'])
+    def hired(self, request, *args, **kwargs):
+        hired_employees = Employee.objects.hired()
+        serializer = EmployeeSerializer(hired_employees, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def fired(self, request, *args, **kwargs):
+        fired_employees = Employee.objects.fired()
+        serializer = EmployeeSerializer(fired_employees, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def make_all_hired(self, request, *args, **kwargs):
+        employees = Employee.objects.all()
+        for employee in employees:
+            employee.hired = True
+            employee.save()
+        serializer = EmployeeSerializer(employees, many=True)
+        return Response(serializer.data)
 
 
 class IncomeViewSet(viewsets.ModelViewSet):

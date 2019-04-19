@@ -38,13 +38,40 @@ class EventsManager(models.Manager):
         return self.get_queryset().all()
 
 
+class EmployeesQuerySet(models.QuerySet):
+    def hired(self):
+        return self.filter(hired=True)
+
+    def fired(self):
+        return self.filter(hired=False)
+
+    def all(self):
+        return self
+
+
+class EmployeesManager(models.Manager):
+    def get_queryset(self):
+        return EmployeesQuerySet(self.model, using=self._db)
+
+    def hired(self):
+        return self.get_queryset().hired()
+
+    def fired(self):
+        return self.get_queryset().fired()
+
+    def all(self):
+        return self.get_queryset().all()
+
+
 class Employee(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    pesel = models.CharField(max_length=11, primary_key=True)
+    pesel = models.CharField(max_length=11, primary_key=True, unique=True)
     position = models.CharField(max_length=50, null=True)
     salary = models.IntegerField(null=True)
     hired = models.BooleanField(default=True)
+
+    objects = EmployeesManager()
 
 
 class Income(models.Model):
