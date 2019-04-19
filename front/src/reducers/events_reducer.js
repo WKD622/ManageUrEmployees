@@ -1,34 +1,87 @@
-import {ADD_NEW_EVENT, REMOVE_EVENT, EDIT_EVENT} from "../actions/events_actions";
+import {
+    REQUEST_ADD_NEW_EVENT,
+    REQUEST_REMOVE_EVENT,
+    REQUEST_EDIT_EVENT,
+    RECEIVE_API_DATA_EVENT,
+    REQUEST_API_DATA_EVENT,
+    RECEIVE_EDIT_EVENT,
+    RECEIVE_ADD_NEW_EVENT,
+    RECEIVE_REMOVE_EVENT,
+} from "../actions/events_actions";
 
 const initialState = {
-    data: [
-        {id: 1, name: 'event1', description: 'description1', datetime: '2019-03-20 21:00'},
-        {id: 2, name: 'event2', description: 'description2', datetime: '2020-04-21 22:00'},
-        {id: 3, name: 'event3', description: 'description3', datetime: '2021-05-22 23:00'}
-    ],
+    isFetching: false,
+    didInvalidate: false,
+    data: [],
     errors: {},
 };
 
 
 export default (state = initialState, {type, data}) => {
     switch (type) {
-        case ADD_NEW_EVENT:
-            return {
-                data: [...state.data, data.event],
-                errors: state.errors,
+        case REQUEST_ADD_NEW_EVENT:
+            return Object.assign({}, state, {
+                isFetching: true,
+                didInvalidate: false,
+            });
+
+        case RECEIVE_ADD_NEW_EVENT:
+            return Object.assign({}, state, {
+                isFetching: true,
+                didInvalidate: false,
+                data: [...state.data]
+            });
+
+        case REQUEST_REMOVE_EVENT:
+            return Object.assign({}, state, {
+                isFetching: true,
+                didInvalidate: false,
+            });
+
+        case RECEIVE_REMOVE_EVENT:
+            return Object.assign({}, state, {
+                isFetching: false,
+                didInvalidate: false,
+                data: [...state.data.filter(event => event.id !== data.id)]
+            });
+
+        case REQUEST_EDIT_EVENT:
+            return Object.assign({}, state, {
+                isFetching: false,
+                didInvalidate: false,
+                data: [...state.data]
+            });
+
+        case RECEIVE_EDIT_EVENT:
+            let name = data.event.name;
+            let description = data.event.description;
+            let datetime = data.event.datetime;
+            let id = data.event.id;
+
+            const edited_event = {
+                name: name,
+                description: description,
+                datetime: datetime,
             };
-        case REMOVE_EVENT:
-            let eventIdToDelete = data.id;
-            return {
-                data: [...state.data.filter(event => event.id !== eventIdToDelete)],
-                errors: state.errors
-            };
-        case EDIT_EVENT:
-            let eventIdToEdit = data.event.id;
-            return {
-                data: [...state.data.filter(event => event.id !== eventIdToEdit), data.event],
-                errors: state.errors
-            };
+
+            return Object.assign({}, state, {
+                isFetching: false,
+                didInvalidate: false,
+                data: [...state.data.filter(event => event.id !== id), edited_event]
+            });
+
+        case RECEIVE_API_DATA_EVENT:
+            console.log(data.events);
+            return Object.assign({}, state, {
+                isFetching: false,
+                didInvalidate: false,
+                data: [...data.events]
+            });
+        case REQUEST_API_DATA_EVENT:
+            return Object.assign({}, state, {
+                isFetching: true,
+                didInvalidate: false
+            });
         default:
             return state || [];
     }

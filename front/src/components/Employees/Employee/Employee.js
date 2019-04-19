@@ -34,10 +34,9 @@ class Employee extends Component {
     render() {
         let employee = <div className="Employee">
             <p>
-                First name: {this.props.first_name}
-            </p>
-            <p>
-                Last name: {this.props.last_name}
+                <h2>
+                {this.props.first_name} {this.props.last_name}
+                </h2>
             </p>
             <p>
                 Salary: {this.props.salary}

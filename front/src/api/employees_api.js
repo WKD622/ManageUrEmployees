@@ -45,6 +45,7 @@ export function putEmployee(employee) {
 }
 
 export function postEmployee(employee) {
+    console.log(employee);
     store.dispatch(requestAddEmployee());
     return fetch('http://127.0.0.1:8000/api/employees/', {
         method: 'POST',

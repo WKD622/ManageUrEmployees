@@ -3,7 +3,7 @@ import Employee from './Employee/Employee';
 import './Employees.css'
 import {connect} from 'react-redux'
 import {deleteEmployee} from "../../api/employees_api";
-import addNewEmployee from "./addNewEmployee"
+import AddNewEmployee from "./AddNewEmployee"
 
 class Employees extends Component {
 
@@ -31,7 +31,7 @@ class Employees extends Component {
         const {employees} = this.props;
         return (
             <div>
-                <addNewEmployee/>
+                <AddNewEmployee/>
                 {employees.data.map((employee, index) => this.person(employee, index))}
             </div>
         )

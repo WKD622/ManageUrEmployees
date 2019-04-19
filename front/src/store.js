@@ -3,6 +3,7 @@ import {createLogger} from 'redux-logger'
 import {createStore, applyMiddleware, compose} from 'redux'
 import {fetchEmployees} from './api/employees_api'
 import index from "./reducers/index";
+import {fetchEvents} from "./api/events_api";
 
 const loggerMiddleware = createLogger();
 
@@ -18,5 +19,5 @@ const store = createStore(
 );
 
 store.dispatch(fetchEmployees()).then(() => console.log(store.getState()));
-
+store.dispatch(fetchEvents()).then(() => console.log(store.getState()));
 export default store;

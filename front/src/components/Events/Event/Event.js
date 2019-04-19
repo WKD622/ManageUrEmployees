@@ -1,7 +1,10 @@
 import './Event.css';
 import React, {Component} from 'react';
 import store from '../../../store'
-import {editEvent} from "../../../actions/events_actions";
+import {putEvent} from "../../../api/events_api";
+import {putEmployee} from "../../../api/employees_api";
+
+// import {editEvent} from "../../../actions/events_actions";
 
 class Event extends Component {
     state = {
@@ -14,7 +17,21 @@ class Event extends Component {
     };
 
     handleChange = (event) => {
-        store.dispatch(editEvent(event.target.value))
+        event.preventDefault();
+        this.hide();
+        let name = event.target.elements.name.value;
+        let description = event.target.elements.description.value;
+        let datetime = event.target.elements.datetime.value;
+        let id = event.target.elements.id.value;
+
+        const edited_event = {
+            name: name,
+            description: description,
+            datetime: datetime,
+            id: id,
+        };
+
+        putEvent(edited_event)
     };
 
     render() {
@@ -51,6 +68,12 @@ class Event extends Component {
                     <label>
                         Date, time:
                         <input type="text" defaultValue={this.props.datetime}/>
+                    </label>
+                </p>
+                <p>
+                    <label>
+                        id:
+                        <input type="hidden" defaultValue={this.props.id}/>
                     </label>
                 </p>
                 <input type="submit" value="Save"/>
