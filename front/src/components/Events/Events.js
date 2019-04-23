@@ -8,7 +8,7 @@ import {deleteEvent} from "../../api/events_api";
 class Events extends Component {
 
     handleDelete = (id) => {
-        // deleteEvent(id)
+        deleteEvent(id)
     };
 
     event = (event) => (
@@ -28,7 +28,8 @@ class Events extends Component {
     render() {
         const {events} = this.props;
         return (
-            <div>
+            <div className="Events">
+                <h1>Events</h1>
                 <AddNewEvent/>
                 {events.data.map((event, index) => this.event(event, index))}
             </div>

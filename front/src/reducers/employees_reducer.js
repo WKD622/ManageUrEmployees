@@ -70,7 +70,7 @@ export default (state = initialState, {type, data}) => {
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                data: [...state.data.filter(employee => employee.pesel !== pesel), edited_employee]
+                data: [...state.data.filter(employee => employee.pesel !== pesel), edited_employee].sort((a, b) => a.pesel - b.pesel)
             });
 
         case RECEIVE_API_DATA_EMPLOYEES:

@@ -23,13 +23,13 @@ class AddNewEvent extends Component {
                 <p>
                     <label>
                         Name:
-                        <input name="datetime" type="text"/>
+                        <input name="name" type="text"/>
                     </label>
                 </p>
                 <p>
                     <label>
                         Description:
-                        <input name="datetime" type="text"/>
+                        <input name="description" type="text"/>
                     </label>
                 </p>
                 <p>

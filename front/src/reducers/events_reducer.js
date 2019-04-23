@@ -62,22 +62,26 @@ export default (state = initialState, {type, data}) => {
                 name: name,
                 description: description,
                 datetime: datetime,
+                id: id,
             };
 
             return Object.assign({}, state, {
-                isFetching: false,
-                didInvalidate: false,
-                data: [...state.data.filter(event => event.id !== id), edited_event]
-            });
+                    isFetching: false,
+                    didInvalidate: false,
+                    data: [...state.data.filter(event => event.id != id), edited_event].sort((a, b) => a.id - b.id)
+                }
+            );
 
-        case RECEIVE_API_DATA_EVENT:
+        case
+        RECEIVE_API_DATA_EVENT:
             console.log(data.events);
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
                 data: [...data.events]
             });
-        case REQUEST_API_DATA_EVENT:
+        case
+        REQUEST_API_DATA_EVENT:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false
@@ -85,4 +89,5 @@ export default (state = initialState, {type, data}) => {
         default:
             return state || [];
     }
-};
+}
+;
