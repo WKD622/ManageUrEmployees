@@ -1,23 +1,36 @@
-import thunkMiddleware from 'redux-thunk'
-import {createLogger} from 'redux-logger'
-import {createStore, applyMiddleware, compose} from 'redux'
-import {fetchEmployees} from './api/employees_api'
+import thunkMiddleware from 'redux-thunk';
+import {createLogger} from 'redux-logger';
+import {createStore, applyMiddleware, compose} from 'redux';
 import index from "./reducers/index";
 import {fetchEvents} from "./api/events_api";
+import createSagaMiddleware from 'redux-saga';
+import watchReceiveApiDataEmployees from './watchers/EmployeesWatcher';
+import {all} from "redux-saga/effects";
 
 const loggerMiddleware = createLogger();
 
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const sagaMiddleware = createSagaMiddleware();
+
 const store = createStore(
     index,
     composeEnhancers(
         applyMiddleware(
             thunkMiddleware,
             loggerMiddleware,
+            sagaMiddleware,
         )
     ),
 );
 
-store.dispatch(fetchEmployees()).then(() => console.log(store.getState()));
+function* rootSaga() {
+    yield all([
+        watchReceiveApiDataEmployees(),
+    ])
+}
+
+sagaMiddleware.run(rootSaga);
 store.dispatch(fetchEvents()).then(() => console.log(store.getState()));
 export default store;

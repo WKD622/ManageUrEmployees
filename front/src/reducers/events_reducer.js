@@ -74,7 +74,6 @@ export default (state = initialState, {type, data}) => {
 
         case
         RECEIVE_API_DATA_EVENT:
-            console.log(data.events);
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,

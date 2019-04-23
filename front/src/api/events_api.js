@@ -12,7 +12,6 @@ import {
 
 export function fetchEvents() {
     return function (dispatch) {
-        console.log(dispatch);
         dispatch(requestApiDataEvent());
         return fetch('http://127.0.0.1:8000/api/events/')
             .then(
@@ -44,7 +43,6 @@ export function putEvent(event) {
 }
 
 export function postEvents(event) {
-    console.log(event);
     store.dispatch(requestAddEvent());
     return fetch('http://127.0.0.1:8000/api/events/', {
         method: 'POST',

@@ -4,8 +4,14 @@ import './Employees.css'
 import {connect} from 'react-redux'
 import {deleteEmployee} from "../../api/employees_api";
 import AddNewEmployee from "./AddNewEmployee"
+import {requestApiDataEmployees} from "../../actions/employees_actions";
+import {bindActionCreators} from "redux/es/redux";
 
 class Employees extends Component {
+
+    componentDidMount() {
+        this.props.requestApiDataEmployees()
+    }
 
     handleDelete = (pesel) => {
         deleteEmployee(pesel)
@@ -40,5 +46,5 @@ class Employees extends Component {
 }
 
 const mapStateToProps = (state) => ({employees: state.employees});
-
-export default connect(mapStateToProps)(Employees);
+const mapDispatchToProps = (dispatch) => bindActionCreators({requestApiDataEmployees}, dispatch);
+export default connect(mapStateToProps, mapDispatchToProps)(Employees);
