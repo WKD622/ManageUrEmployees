@@ -1,10 +1,6 @@
 import './Event.css';
 import React, {Component} from 'react';
-import store from '../../../store'
 import {putEvent} from "../../../api/events_api";
-import {putEmployee} from "../../../api/employees_api";
-
-// import {editEvent} from "../../../actions/events_actions";
 
 class Event extends Component {
     state = {

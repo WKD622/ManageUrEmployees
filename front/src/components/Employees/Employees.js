@@ -2,9 +2,11 @@ import React, {Component} from 'react';
 import Employee from './Employee/Employee';
 import './Employees.css'
 import {connect} from 'react-redux'
-import {deleteEmployee} from "../../api/employees_api";
 import AddNewEmployee from "./AddNewEmployee"
-import {requestApiDataEmployees} from "../../actions/employees_actions";
+import {
+    requestApiDataEmployees,
+    requestRemoveEmployee,
+} from "../../actions/employees_actions";
 import {bindActionCreators} from "redux/es/redux";
 
 class Employees extends Component {
@@ -14,7 +16,7 @@ class Employees extends Component {
     }
 
     handleDelete = (pesel) => {
-        deleteEmployee(pesel)
+        this.props.requestRemoveEmployee(pesel)
     };
 
     person = (employee, index) => (
@@ -46,5 +48,8 @@ class Employees extends Component {
 }
 
 const mapStateToProps = (state) => ({employees: state.employees});
-const mapDispatchToProps = (dispatch) => bindActionCreators({requestApiDataEmployees}, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    requestApiDataEmployees,
+    requestRemoveEmployee
+}, dispatch);
 export default connect(mapStateToProps, mapDispatchToProps)(Employees);

@@ -89,4 +89,3 @@ export default (state = initialState, {type, data}) => {
             return state || [];
     }
 }
-;

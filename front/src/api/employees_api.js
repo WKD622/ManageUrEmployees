@@ -1,92 +1,59 @@
 import fetch from "cross-fetch";
-import {
-    requestEditEmployee,
-    receiveApiDataEmployees,
-    requestApiDataEmployees,
-    receiveEditEmployee,
-    receiveAddEmployee,
-    requestAddEmployee,
-    requestRemoveEmployee,
-    receiveRemoveEmployee,
-} from "../actions/employees_actions";
-import store from '../store'
-
-// export function fetchEmployees() {
-//     return function (dispatch) {
-//         console.log(dispatch);
-//         dispatch(requestApiDataEmployees());
-//         return fetch('http://127.0.0.1:8000/api/employees/')
-//             .then(
-//                 response => response.json(),
-//                 error => console.log('An error occured', error)
-//             )
-//             .then(json =>
-//                 dispatch(receiveApiDataEmployees(json))
-//             )
-//     }
-// }
 
 export const fetchEmployees = async () => {
     try {
         const response = await fetch('http://127.0.0.1:8000/api/employees/');
-        const employees = await response.json();
-        return employees;
+        const fetched_employees = await response.json();
+        return fetched_employees;
     } catch (e) {
         console.log(e);
     }
 };
 
-export function putEmployee(employee) {
-    store.dispatch(requestEditEmployee());
-    return fetch('http://127.0.0.1:8000/api/employees/' + employee.pesel + "/", {
-        method: 'PUT',
-        body: JSON.stringify(employee), // data can be `string` or {object}!
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(
-            response => response.json(),
-            error => console.log('An error occured', error)
-        )
-        .then(
-            store.dispatch(receiveEditEmployee(employee))
-        )
-}
+export const putEmployee = async (employee) => {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/employees/' + employee.pesel + "/", {
+            method: 'PUT',
+            body: JSON.stringify(employee), // data can be `string` or {object}!
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        return await response.json();
+    } catch (e) {
+        console.log(e)
+    }
+};
 
-export function postEmployee(employee) {
-    store.dispatch(requestAddEmployee());
-    return fetch('http://127.0.0.1:8000/api/employees/', {
-        method: 'POST',
-        body: JSON.stringify(employee), // data can be `string` or {object}!
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(
-            response => response.json(),
-            error => console.log('An error occured', error)
-        )
-        .then(
-            store.dispatch(receiveAddEmployee(employee))
-        )
-}
+export const postEmployee = async (employee) => {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/employees/', {
+            method: 'POST',
+            body: JSON.stringify(employee), // data can be `string` or {object}!
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const added_employee = await response.json();
+        return added_employee;
+    } catch (e) {
+        console.log(e);
+    }
+};
 
 
-export function deleteEmployee(pesel) {
-    store.dispatch(requestRemoveEmployee());
-    return fetch('http://127.0.0.1:8000/api/employees/' + pesel + '/', {
-        method: 'DELETE',
-        body: JSON.stringify(pesel), // data can be `string` or {object}!
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(
-            response => response.json(),
-            error => console.log('An error occured', error)
-        )
-        .then(
-            store.dispatch(receiveRemoveEmployee(pesel))
-        )
-}
+export const deleteEmployee = async (pesel) => {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/employees/' + pesel + '/', {
+            method: 'DELETE',
+            body: JSON.stringify(pesel), // data can be `string` or {object}!
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const removed_employee = await response.json();
+        return removed_employee
+    } catch (e) {
+        console.log(e)
+    }
+};

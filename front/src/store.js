@@ -4,7 +4,12 @@ import {createStore, applyMiddleware, compose} from 'redux';
 import index from "./reducers/index";
 import {fetchEvents} from "./api/events_api";
 import createSagaMiddleware from 'redux-saga';
-import watchReceiveApiDataEmployees from './watchers/EmployeesWatcher';
+import {
+    watchReceiveApiDataEmployees,
+    watchReceiveAddNewEmployee,
+    watchReceiveEditEmployee,
+    watchReceiveRemoveEmployee
+} from './watchers/EmployeesWatcher';
 import {all} from "redux-saga/effects";
 
 const loggerMiddleware = createLogger();
@@ -28,9 +33,12 @@ const store = createStore(
 function* rootSaga() {
     yield all([
         watchReceiveApiDataEmployees(),
+        watchReceiveEditEmployee(),
+        watchReceiveRemoveEmployee(),
+        watchReceiveAddNewEmployee(),
     ])
 }
 
 sagaMiddleware.run(rootSaga);
-store.dispatch(fetchEvents()).then(() => console.log(store.getState()));
+// store.dispatch(fetchEvents()).then(() => console.log(store.getState()));
 export default store;
