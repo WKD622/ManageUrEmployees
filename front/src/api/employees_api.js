@@ -19,7 +19,7 @@ export const putEmployee = async (employee) => {
                 'Content-Type': 'application/json'
             }
         });
-        return await response.json();
+        return response.json();
     } catch (e) {
         console.log(e)
     }
