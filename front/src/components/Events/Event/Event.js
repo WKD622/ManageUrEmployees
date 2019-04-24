@@ -24,6 +24,8 @@ class Event extends Component {
         let datetime = event.target.elements.datetime.value;
         let id = event.target.elements.id.value;
 
+        console.log(id);
+
         const edited_event = {
             name: name,
             description: description,
@@ -38,7 +40,7 @@ class Event extends Component {
 
         let event = <div className="Event">
             <p>
-                Name: {this.props.name}
+                <h2>{this.props.name}</h2>
             </p>
             <p>
                 Description: {this.props.description}
@@ -55,25 +57,24 @@ class Event extends Component {
                 <p>
                     <label>
                         Name:
-                        <input type="text" defaultValue={this.props.name}/>
+                        <input name="name" type="text" defaultValue={this.props.name}/>
                     </label>
                 </p>
                 <p>
                     <label>
                         Description:
-                        <input type="text" defaultValue={this.props.description}/>
+                        <input name="description" type="text" defaultValue={this.props.description}/>
                     </label>
                 </p>
                 <p>
                     <label>
                         Date, time:
-                        <input type="text" defaultValue={this.props.datetime}/>
+                        <input name="datetime" type="text" defaultValue={this.props.datetime}/>
                     </label>
                 </p>
                 <p>
                     <label>
-                        id:
-                        <input type="hidden" defaultValue={this.props.id}/>
+                        <input name="id" type="hidden" defaultValue={this.props.id}/>
                     </label>
                 </p>
                 <input type="submit" value="Save"/>

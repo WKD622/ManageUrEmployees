@@ -1,8 +1,13 @@
 import React from 'react'
+import './Incomes.css'
 
 class Incomes extends React.Component {
     render() {
-        return <h1>Incomes</h1>
+        return (
+            <div className="Incomes">
+                <h1>Incomes</h1>
+            </div>
+        )
     }
 }
 

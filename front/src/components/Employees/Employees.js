@@ -12,7 +12,7 @@ class Employees extends Component {
     };
 
     person = (employee, index) => (
-        <div className={Employees}>{
+        <div>{
             <Employee
                 key={employee.pesel}
                 first_name={employee.first_name}
@@ -30,7 +30,8 @@ class Employees extends Component {
     render() {
         const {employees} = this.props;
         return (
-            <div>
+            <div className="Employees">
+                <h1>Employees</h1>
                 <AddNewEmployee/>
                 {employees.data.map((employee, index) => this.person(employee, index))}
             </div>

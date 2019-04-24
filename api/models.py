@@ -17,9 +17,6 @@ class EventsQuerySet(models.QuerySet):
     def next_event(self):
         return self.future_events().first()
 
-    def all(self):
-        return self
-
 
 class EventsManager(models.Manager):
     def get_queryset(self):
@@ -34,9 +31,6 @@ class EventsManager(models.Manager):
     def next_event(self):
         return self.get_queryset().next_event()
 
-    def all(self):
-        return self.get_queryset().all()
-
 
 class EmployeesQuerySet(models.QuerySet):
     def hired(self):
@@ -44,9 +38,6 @@ class EmployeesQuerySet(models.QuerySet):
 
     def fired(self):
         return self.filter(hired=False)
-
-    def all(self):
-        return self
 
 
 class EmployeesManager(models.Manager):
@@ -58,9 +49,6 @@ class EmployeesManager(models.Manager):
 
     def fired(self):
         return self.get_queryset().fired()
-
-    def all(self):
-        return self.get_queryset().all()
 
 
 class Employee(models.Model):
