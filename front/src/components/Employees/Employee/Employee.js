@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import './Employee.css';
-import {putEmployee} from "../../../api/employees_api";
+import {requestEditEmployee} from "../../../actions/employees_actions";
+import {connect} from 'react-redux'
+import {bindActionCreators} from "redux/es/redux";
 
 class Employee extends Component {
     state = {
@@ -28,16 +30,15 @@ class Employee extends Component {
             position: position,
             salary: salary,
         };
-        putEmployee(employee);
+
+        this.props.requestEditEmployee(employee)
     };
 
     render() {
         let employee = <div className="Employee">
-            <p>
                 <h2>
-                {this.props.first_name} {this.props.last_name}
+                    {this.props.first_name} {this.props.last_name}
                 </h2>
-            </p>
             <p>
                 Salary: {this.props.salary}
             </p>
@@ -53,40 +54,42 @@ class Employee extends Component {
 
 
         if (this.state.showForm) {
-            employee = <form className={"Employee"} onSubmit={this.handleChange}>
-                <p>
-                    <label>
-                        First name:
-                        <input name="first_name" type="text" defaultValue={this.props.first_name}/>
-                    </label>
-                </p>
-                <p>
-                    <label>
-                        Last name:
-                        <input name="last_name" type="text" defaultValue={this.props.last_name}/>
-                    </label>
-                </p>
-                <p>
-                    <label>
-                        Salary:
-                        <input name="salary" type="text" defaultValue={this.props.salary}/>
-                    </label>
-                </p>
-                <p>
-                    <label>
-                        Pesel:
-                        <input name="pesel" type="text" defaultValue={this.props.pesel}/>
-                    </label>
-                </p>
-                <p>
-                    <label>
-                        Position:
-                        <input name="position" type="text" defaultValue={this.props.position}/>
-                    </label>
-                </p>
+            employee = <div>
+                <form className={"Employee"} onSubmit={this.handleChange}>
+                    <p>
+                        <label>
+                            First name:
+                            <input name="first_name" type="text" defaultValue={this.props.first_name}/>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            Last name:
+                            <input name="last_name" type="text" defaultValue={this.props.last_name}/>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            Salary:
+                            <input name="salary" type="text" defaultValue={this.props.salary}/>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            Pesel:
+                            <input name="pesel" type="text" defaultValue={this.props.pesel}/>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            Position:
+                            <input name="position" type="text" defaultValue={this.props.position}/>
+                        </label>
+                    </p>
 
-                <input type="submit" value="Save"/>
-            </form>
+                    <input type="submit" value="Save"/>
+                </form>
+            </div>
         }
 
         return (
@@ -94,8 +97,10 @@ class Employee extends Component {
                 {employee}
             </div>
         )
-
     }
 }
 
-export default Employee;
+const mapStateToProps = (state) => state;
+const mapDispatchToProps = (dispatch) => bindActionCreators({requestEditEmployee}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Employee);

@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import './Employee/Employee.css';
-import {postEmployee} from "../../api/employees_api";
+import {bindActionCreators} from "redux/es/redux";
+import {requestAddEmployee} from "../../actions/employees_actions";
+import {connect} from 'react-redux'
 
 class AddNewEmployee extends Component {
 
@@ -18,48 +20,51 @@ class AddNewEmployee extends Component {
             position: position,
             salary: salary,
         };
-        // console.log(new_employee);
-        postEmployee(new_employee);
+
+        this.props.requestAddEmployee(new_employee);
     };
 
     render() {
         return (
-            <form className={"Employee"} onSubmit={this.handleAdd}>
-                <p>
-                    <label>
-                        First name:
-                        <input name="first_name" type="text"/>
-                    </label>
-                </p>
-                <p>
-                    <label>
-                        Last name:
-                        <input name="last_name" type="text"/>
-                    </label>
-                </p>
-                <p>
-                    <label>
-                        Salary:
-                        <input name="salary" type="text"/>
-                    </label>
-                </p>
-                <p>
-                    <label>
-                        Pesel:
-                        <input name="pesel" type="text"/>
-                    </label>
-                </p>
-                <p>
-                    <label>
-                        Position:
-                        <input name="position" type="text"/>
-                    </label>
-                </p>
+            <div>
+                <form className={"Employee"} onSubmit={this.handleAdd}>
+                    <p>
+                        <label>
+                            First name:
+                            <input name="first_name" type="text"/>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            Last name:
+                            <input name="last_name" type="text"/>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            Salary:
+                            <input name="salary" type="text"/>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            Pesel:
+                            <input name="pesel" type="text"/>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            Position:
+                            <input name="position" type="text"/>
+                        </label>
+                    </p>
 
-                <input type="submit" value="Save"/>
-            </form>
+                    <input type="submit" value="Save"/>
+                </form>
+            </div>
         )
     }
 }
 
-export default AddNewEmployee;
+const mapDispatchToProps = (dispatch) => bindActionCreators({requestAddEmployee}, dispatch);
+export default connect(null, mapDispatchToProps)(AddNewEmployee);

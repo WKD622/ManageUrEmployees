@@ -9,6 +9,7 @@ import {
 } from "../../actions/employees_actions";
 import {bindActionCreators} from "redux/es/redux";
 
+
 class Employees extends Component {
 
     componentDidMount() {
@@ -20,18 +21,19 @@ class Employees extends Component {
     };
 
     person = (employee, index) => (
-        <div>{
-            <Employee
-                key={employee.pesel}
-                first_name={employee.first_name}
-                last_name={employee.last_name}
-                pesel={employee.pesel}
-                position={employee.position}
-                salary={employee.salary}
-                index={index}
-                handler={this.handleDelete}
-            />
-        }
+        <div>
+            {
+                <Employee
+                    key={employee.pesel}
+                    first_name={employee.first_name}
+                    last_name={employee.last_name}
+                    pesel={employee.pesel}
+                    position={employee.position}
+                    salary={employee.salary}
+                    index={index}
+                    handler={this.handleDelete}
+                />
+            }
         </div>
     );
 
@@ -52,4 +54,5 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
     requestApiDataEmployees,
     requestRemoveEmployee
 }, dispatch);
+
 export default connect(mapStateToProps, mapDispatchToProps)(Employees);

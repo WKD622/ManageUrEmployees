@@ -2,7 +2,6 @@ import thunkMiddleware from 'redux-thunk';
 import {createLogger} from 'redux-logger';
 import {createStore, applyMiddleware, compose} from 'redux';
 import index from "./reducers/index";
-import {fetchEvents} from "./api/events_api";
 import createSagaMiddleware from 'redux-saga';
 import {
     watchReceiveApiDataEmployees,
@@ -13,7 +12,6 @@ import {
 import {all} from "redux-saga/effects";
 
 const loggerMiddleware = createLogger();
-
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 

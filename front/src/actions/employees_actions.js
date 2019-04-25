@@ -1,6 +1,9 @@
 export const REQUEST_ADD_NEW_EMPLOYEE = "REQUEST_ADD_NEW_EMPLOYEE";
-export const requestAddEmployee = () => ({
+export const requestAddEmployee = (employee) => ({
     type: REQUEST_ADD_NEW_EMPLOYEE,
+    data: {
+        employee,
+    }
 });
 
 export const RECEIVE_ADD_NEW_EMPLOYEE = "RECEIVE_ADD_NEW_EMPLOYEE";
@@ -12,8 +15,11 @@ export const receiveAddEmployee = (employee) => ({
 });
 
 export const REQUEST_REMOVE_EMPLOYEE = "REQUEST_REMOVE_EMPLOYEE";
-export const requestRemoveEmployee = () => ({
+export const requestRemoveEmployee = (pesel) => ({
     type: REQUEST_REMOVE_EMPLOYEE,
+    data: {
+        pesel,
+    }
 });
 
 export const RECEIVE_REMOVE_EMPLOYEE = "RECEIVE_REMOVE_EMPLOYEE";
@@ -25,21 +31,29 @@ export const receiveRemoveEmployee = (pesel) => ({
 });
 
 export const REQUEST_EDIT_EMPLOYEE = "REQUEST_EDIT_EMPLOYEE";
-export const requestEditEmployee = () => ({
+export const requestEditEmployee = (employee) => ({
     type: REQUEST_EDIT_EMPLOYEE,
-});
-
-export const RECEIVE_EDIT_EMPLOYEE = "RECEIVE_EDIT_EMPLOYEE";
-export const receiveEditEmployee = (employee) => ({
-    type: RECEIVE_EDIT_EMPLOYEE,
     data: {
         employee,
     }
 });
 
+export const RECEIVE_EDIT_EMPLOYEE = "RECEIVE_EDIT_EMPLOYEE";
+export const receiveEditEmployee = (employee) => {
+    return {
+        type: RECEIVE_EDIT_EMPLOYEE,
+        data: {
+            employee,
+        }
+    }
+};
+
 export const REQUEST_API_DATA_EMPLOYEES = "REQUEST_API_DATA_EMPLOYEES";
-export const requestApiDataEmployees = () => ({
+export const requestApiDataEmployees = (employees) => ({
     type: REQUEST_API_DATA_EMPLOYEES,
+    data: {
+        employees,
+    }
 });
 
 export const RECEIVE_API_DATA_EMPLOYEES = "RECEIVE_API_DATA_EMPLOYEES";

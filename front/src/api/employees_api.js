@@ -35,6 +35,7 @@ export const postEmployee = async (employee) => {
             }
         });
         const added_employee = await response.json();
+        console.log(added_employee);
         return added_employee;
     } catch (e) {
         console.log(e);
@@ -51,8 +52,9 @@ export const deleteEmployee = async (pesel) => {
                 'Content-Type': 'application/json'
             }
         });
-        const removed_employee = await response.json();
-        return removed_employee
+        // const removed_employee = await response.json();
+
+        return pesel
     } catch (e) {
         console.log(e)
     }
